@@ -27,6 +27,8 @@ import caffe
 import google.protobuf as pb2
 from caffe.proto import caffe_pb2
 from utils.timer import Timer
+import google.protobuf.text_format
+
 
 from config import cfg
 from test import test_net

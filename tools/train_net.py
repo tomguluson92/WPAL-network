@@ -26,6 +26,7 @@ import _init_path
 import argparse
 import os
 import sys
+import google.protobuf.text_format
 
 import caffe
 from wpal_net.config import cfg, cfg_from_file, cfg_from_list
