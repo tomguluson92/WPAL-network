@@ -1,12 +1,35 @@
-# Inception Network (GoogLeNet Batch Normalization Network)
-name: "InceptionNetwork"
+# --------------------------------------------------------------------
+# This file is part of
+# Weakly-supervised Pedestrian Attribute Localization Network.
+#
+# Weakly-supervised Pedestrian Attribute Localization Network
+# is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Weakly-supervised Pedestrian Attribute Localization Network
+# is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Weakly-supervised Pedestrian Attribute Localization Network.
+# If not, see <http://www.gnu.org/licenses/>.
+# --------------------------------------------------------------------
+
+name: "GOOGLENET_BN_SPP_RAP"
+
 input: "data"
+
 input_shape {
-  dim: 10
+  dim: 1
   dim: 3
   dim: 224
   dim: 224
 }
+########################## GOOGLENET ##########################
 layer {
  bottom: "data"
   top: "conv1/7x7_s2"
@@ -3064,22 +3087,12 @@ layer {
   name: "inception_5b/output"
   type: "Concat"
 }
+########################## Feature Transform Conv Layers ##########################
 layer {
-  bottom: "inception_5b/output"
-  top: "pool5/7x7_s1"
-  name: "pool5/7x7_s1"
-  type: "Pooling"
-  pooling_param {
-    pool: AVE
-    kernel_size: 7
-    stride: 1
-  }
-}
-layer {
-  bottom: "pool5/7x7_s1"
-  top: "loss3/classifier"
-  name: "loss3/classifier"
-  type: "InnerProduct"
+  bottom: "inception_4a/output"
+  top: "conv3_e"
+  name: "conv3_e"
+  type: "Convolution"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -3088,20 +3101,358 @@ layer {
     lr_mult: 2
     decay_mult: 0
   }
-  inner_product_param {
-    num_output: 1000
+  convolution_param {
     weight_filler {
-      type: "xavier"
+        type: "xavier"
     }
     bias_filler {
-      type: "constant"
-      value: 0
+        type: "constant"
+        value: 0
     }
+    num_output: 512
+    pad: 1
+    kernel_size: 3
   }
 }
-layers {
-  bottom: "loss3/classifier"
-  top: "prob"
-  name: "prob"
-  type: "Softmax"
+layer {
+  bottom: "conv3_e"
+  top: "conv3_e"
+  name: "prelu_conv3_e"
+  type: "ReLU"
+}
+layer {
+  bottom: "inception_4d/output"
+  top: "conv4_e"
+  name: "conv4_e"
+  type: "Convolution"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    weight_filler {
+        type: "xavier"
+    }
+    bias_filler {
+        type: "constant"
+        value: 0
+    }
+    num_output: 512
+    pad: 1
+    kernel_size: 3
+  }
+}
+layer {
+  bottom: "conv4_e"
+  top: "conv4_e"
+  name: "prelu_conv4_e"
+  type: "ReLU"
+}
+layer {
+  bottom: "inception_5b/output"
+  top: "conv5_e"
+  name: "conv5_e"
+  type: "Convolution"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    weight_filler {
+        type: "xavier"
+    }
+    bias_filler {
+        type: "constant"
+        value: 0
+    }
+    num_output: 1024
+    pad: 1
+    kernel_size: 3
+  }
+}
+layer {
+  bottom: "conv5_e"
+  top: "conv5_e"
+  name: "prelu_conv5_e"
+  type: "ReLU"
+}
+########################## SPP Layers ##########################
+layer {
+  bottom: "conv3_e"
+  top: "spp3"
+  name: "spp3"
+  type: "SPP"
+  spp_param {
+    pool: MAX
+    pyramid_height: 2
+    fineness_h: 3
+    overlap_ratio_h: 0.3
+    fineness_w: 3
+    overlap_ratio_w: 0.3
+  }
+}
+layer {
+  bottom: "conv4_e"
+  top: "spp4"
+  name: "spp4"
+  type: "SPP"
+  spp_param {
+    pool: MAX
+    pyramid_height: 2
+    fineness_h: 3
+    overlap_ratio_h: 0.2
+    fineness_w: 3
+    overlap_ratio_w: 0.2
+  }
+}
+layer {
+  bottom: "conv5_e"
+  top: "spp5"
+  name: "spp5"
+  type: "SPP"
+  spp_param {
+    pool: MAX
+    pyramid_height: 2
+    fineness_h: 3
+    overlap_ratio_h: 0.1
+    fineness_w: 1
+    overlap_ratio_w: 0.1
+  }
+}
+########################## Independent FC Layers ##########################
+layer {
+  bottom: "spp3"
+  top: "fc3_e"
+  name: "fc3_e"
+  type: "InnerProduct"
+  param {
+    lr_mult: 0.5
+    decay_mult: 0.5
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  inner_product_param {
+    weight_filler {
+        type: "gaussian"
+        std: 0.005
+    }
+    bias_filler {
+        type: "constant"
+        value: 0.1
+    }
+    num_output: 512
+  }
+}
+layer {
+  bottom: "fc3_e"
+  top: "fc3_e"
+  name: "prelu_fc3_e"
+  type: "ReLU"
+}
+layer {
+  bottom: "fc3_e"
+  top: "fc3_e"
+  name: "drop3"
+  type: "Dropout"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  bottom: "spp4"
+  top: "fc4_e"
+  name: "fc4_e"
+  type: "InnerProduct"
+  param {
+    lr_mult: 0.5
+    decay_mult: 0.5
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  inner_product_param {
+    weight_filler {
+        type: "gaussian"
+        std: 0.005
+    }
+    bias_filler {
+        type: "constant"
+        value: 0.1
+    }
+    num_output: 512
+  }
+}
+layer {
+  bottom: "fc4_e"
+  top: "fc4_e"
+  name: "prelu_fc4_e"
+  type: "ReLU"
+}
+layer {
+  bottom: "fc4_e"
+  top: "fc4_e"
+  name: "drop4"
+  type: "Dropout"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  bottom: "spp5"
+  top: "fc5_e"
+  name: "fc5_e"
+  type: "InnerProduct"
+  param {
+    lr_mult: 0.5
+    decay_mult: 0.5
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  inner_product_param {
+    weight_filler {
+        type: "gaussian"
+        std: 0.005
+    }
+    bias_filler {
+        type: "constant"
+        value: 0.1
+    }
+    num_output: 1024
+  }
+}
+layer {
+  bottom: "fc5_e"
+  top: "fc5_e"
+  name: "prelu_fc5_e"
+  type: "ReLU"
+}
+layer {
+  bottom: "fc5_e"
+  top: "fc5_e"
+  name: "drop5"
+  type: "Dropout"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+########################## Synthesis Layers ##########################
+layer {
+  name: "concat"
+  bottom: "fc3_e"
+  bottom: "fc4_e"
+  bottom: "fc5_e"
+  top: "concat"
+  type: "Concat"
+}
+layer {
+  bottom: "concat"
+  top: "fc_syn1"
+  name: "fc_syn1"
+  type: "InnerProduct"
+  param {
+    lr_mult: 0.5
+    decay_mult: 0.5
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  inner_product_param {
+    weight_filler {
+        type: "gaussian"
+        std: 0.005
+    }
+    bias_filler {
+        type: "constant"
+        value: 0.1
+    }
+    num_output: 2048
+  }
+}
+layer {
+  bottom: "fc_syn1"
+  top: "fc_syn1"
+  name: "prelu_syn1"
+  type: "ReLU"
+}
+layer {
+  bottom: "fc_syn1"
+  top: "fc_syn1"
+  name: "drop"
+  type: "Dropout"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  bottom: "fc_syn1"
+  top: "fc_syn2"
+  name: "fc_syn2"
+  type: "InnerProduct"
+  param {
+    lr_mult: 0.5
+    decay_mult: 0.5
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 0
+  }
+  inner_product_param {
+    weight_filler {
+        type: "gaussian"
+        std: 0.005
+    }
+    bias_filler {
+        type: "constant"
+        value: 0.1
+    }
+    num_output: 92
+  }
+}
+####################### Predicting Layer #######################
+layer {
+  bottom: "fc_syn2"
+  name: "pred"
+  top: "pred"
+  type: "Sigmoid"
+}
+###################### Localization Layers ######################
+layer {
+  bottom: "conv3_e"
+  top: "heat3"
+  name: "heat3"
+  type: "Concat"
+}
+layer {
+  bottom: "conv4_e"
+  top: "heat4"
+  name: "heat4"
+  type: "Concat"
+}
+layer {
+  bottom: "conv5_e"
+  top: "heat5"
+  name: "heat5"
+  type: "Concat"
+}
+layer {
+  bottom: "spp3"
+  bottom: "spp4"
+  bottom: "spp5"
+  top: "score"
+  name: "score"
+  type: "Concat"
 }
