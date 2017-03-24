@@ -19,7 +19,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------
 
-net: "models/GOOGLENET_BN_SPP_PETA/train_net.prototxt"
+net: "models/GOOGLENET_BN_SPP_RAP/train_net.prototxt"
 #test_iter: 1000
 #test_interval: 4000
 #test_initialization: false
