@@ -1021,18 +1021,7 @@ layer {
   type: "Concat"
 }
 layer {
-  name: "pool3/3x3_s2"
-  type: "Pooling"
   bottom: "inception_3c/output"
-  top: "pool3/3x3_s2"
-  pooling_param {
-    pool: MAX
-    kernel_size: 3
-    stride: 2
-  }
-}
-layer {
-  bottom: "pool3/3x3_s2"
   top: "inception_4a/1x1"
   name: "inception_4a/1x1"
   type: "Convolution"
@@ -2488,18 +2477,7 @@ layer {
   type: "Concat"
 }
 layer {
-  name: "pool4/3x3_s2"
-  type: "Pooling"
   bottom: "inception_4e/output"
-  top: "pool4/3x3_s2"
-  pooling_param {
-    pool: MAX
-    kernel_size: 3
-    stride: 2
-  }
-}
-layer {
-  bottom: "pool4/3x3_s2"
   top: "inception_5a/1x1"
   name: "inception_5a/1x1"
   type: "Convolution"
@@ -3116,7 +3094,7 @@ layer {
 }
 ########################## Feature Transform Conv Layers ##########################
 layer {
-  bottom: "inception_4a/output"
+  bottom: "inception_3c/output"
   top: "conv3_e"
   name: "conv3_e"
   type: "Convolution"
@@ -3148,7 +3126,7 @@ layer {
   type: "ReLU"
 }
 layer {
-  bottom: "inception_4d/output"
+  bottom: "inception_4e/output"
   top: "conv4_e"
   name: "conv4_e"
   type: "Convolution"
