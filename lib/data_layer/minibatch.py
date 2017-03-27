@@ -39,7 +39,7 @@ def get_minibatch(img_paths, labels, flip, flip_attr_pairs, weight):
                                     size=num_images)
 
     # Get the input image blob, formatted for caffe
-    img_blob, img_scales = _get_image_blob(img_paths, random_scale_inds, flip)
+    img_blob = _get_image_blob(img_paths, random_scale_inds, flip)
     attr_blob = _get_attr_blob(labels, flip, flip_attr_pairs)
     weight_blob = _get_weight_blob(labels, weight)
 
@@ -89,19 +89,17 @@ def _get_image_blob(img_paths, scale_inds, flip):
     """
     num_images = len(img_paths)
     processed_imgs = []
-    img_scales = []
     for i in xrange(num_images):
         img = cv2.imread(img_paths[i])
         """Flip the image if required."""
         if flip[i]:
             img = cv2.flip(img, 1)
         target_size = cfg.TRAIN.SCALES[scale_inds[i]]
-        img, img_scale = prep_img_for_blob(img, cfg.PIXEL_MEANS, target_size,
-                                           cfg.TRAIN.MAX_AREA, cfg.MIN_SIZE)
-        img_scales.append(img_scale)
+        img = prep_img_for_blob(img, cfg.PIXEL_MEANS, target_size,
+                                cfg.TRAIN.MAX_AREA, cfg.MIN_SIZE)
         processed_imgs.append(img)
 
     # Create a blob to hold the input images
     blob = img_list_to_blob(processed_imgs)
 
-    return blob, img_scales
+    return blob

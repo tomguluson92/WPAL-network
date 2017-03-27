@@ -73,4 +73,4 @@ def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size):
     img = cv2.add(img, zitter)
 
     return img
-    #return img, img_scale
+    #return img
