@@ -37,20 +37,27 @@ def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size):
     img = img.astype(np.float32, copy=False)
     img -= pixel_means
     img_shape = img.shape
-    img_size_min = np.min(img_shape[0:2])
-    img_size_max = np.max(img_shape[0:2])
-    img_scale = float(target_size) / float(img_size_max)
+    img_height, img_width = img_shape[:2]
+    img_scale = []
+    img_ratio = round(float(img_height) / float(img_width))
+    #img_size_min = np.min(img_shape[0:2])
+    #img_size_max = np.max(img_shape[0:2])
+    #img_scale = float(target_size) / float(img_size_max)
 
-    # Prevent the shorter sides from being less than MIN_SIZE
-    if np.round(img_scale * img_size_min < min_size):
-        img_scale = np.round(min_size / img_size_min) + 1
+    ## Prevent the shorter sides from being less than MIN_SIZE
+    #if np.round(img_scale * img_size_min < min_size):
+    #    img_scale = np.round(min_size / img_size_min) + 1
 
-    # Prevent the scaled area from being more than MAX_AREA
-    if np.round(img_scale * img_size_min * img_scale * img_size_max) > max_area:
-        img_scale = math.sqrt(float(max_area) / float(img_size_min * img_size_max))
+    ## Prevent the scaled area from being more than MAX_AREA
+    #if np.round(img_scale * img_size_min * img_scale * img_size_max) > max_area:
+    #    img_scale = math.sqrt(float(max_area) / float(img_size_min * img_size_max))
 
     # Resize the sample.
-    img = cv2.resize(img, None, None, fx=img_scale, fy=img_scale, interpolation=cv2.INTER_LINEAR)
+    img_new_width = math.sqrt(float(max_area)/float(img_ratio))
+    img_new_height = img_ratio * img_new_width
+    img_scale[0] = img_new_height/img_height
+    img_scale[1] = img_new_width/img_width
+    img = cv2.resize(img, None, None, fx=img_scale[1], fy=img_scale[0], interpolation=cv2.INTER_LINEAR)
 
     # Randomly rotate the sample.
     img = cv2.warpAffine(img,
@@ -65,4 +72,5 @@ def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size):
         zitter[:, :, i] = np.random.randint(0, cfg.TRAIN.RGB_JIT, (h, w)) - cfg.TRAIN.RGB_JIT / 2
     img = cv2.add(img, zitter)
 
-    return img, img_scale
+    return img
+    #return img, img_scale

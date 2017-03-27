@@ -56,6 +56,7 @@ class DataLayer(caffe.Layer):
             print 'Terminating BlobFetcher'
             self._prefetch_process.terminate()
             self._prefetch_process.join()
+
         import atexit
         atexit.register(cleanup)
 
@@ -75,7 +76,7 @@ class DataLayer(caffe.Layer):
 
         top[idx].reshape(cfg.TRAIN.BATCH_SIZE, cfg.NUM_ATTR)
         self._name_to_top_map['weight'] = idx
-        idx += 1       
+        idx += 1
 
         print 'DataLayer: name_to_top:', self._name_to_top_map
         assert len(top) == len(self._name_to_top_map)
@@ -108,9 +109,15 @@ class BlobFetcher(Process):
         self._queue = queue
         self._db = db
         self._perm = None
+        self._perm_raw = None
+        self._perm_classified = []
+        for i in xrange(11):
+            self._perm_classified.append([])
         self._cur = 0
+        self._num_raw = 0
         self._do_flip = do_flip
         self._train_ind = self._db.train_ind
+        self._train_classified_ind = self._db.train_classified_ind
         self._weight = db.label_weight
 
         self._shuffle_train_inds()
@@ -120,15 +127,27 @@ class BlobFetcher(Process):
 
     def _shuffle_train_inds(self):
         """Randomly permute the training database."""
-        self._perm = np.random.permutation(xrange(len(self._train_ind[2]) * (2 if self._do_flip else 1)))
+
+        for i in range(0, 11):
+            self._perm_classified[i] = np.random.permutation(xrange(len(self._train_classified_ind[i])))
+        self._perm_raw = np.random.permutation(xrange(11))
+        # self._perm = np.random.permutation(xrange(len(self._train_ind[2]) * (2 if self._do_flip else 1)))
         self._cur = 0
+        self._num_raw = 0
 
     def _get_next_minibatch_inds(self):
         """Return the roidb indices for the next minibatch."""
-        if self._cur >= len(self._db.train_ind):
+        if self._cur >= len(self._db.train_classified_ind[self._perm_raw[self._num_raw]]):
+            self._num_raw += 1
+            self._cur = 0
+        if self._num_raw > 10:
             self._shuffle_train_inds()
-
-        minibatch_inds = self._perm[self._cur:self._cur + cfg.TRAIN.BATCH_SIZE]
+        minibatch_inds = []
+        for i in range(self._cur, self._cur + cfg.TRAIN.BATCH_SIZE
+                       if self._cur+cfg.TRAIN.BATCH_SIZE <= len(self._perm_classified[self._perm_raw[self._num_raw]])
+                       else len(self._perm_classified[self._perm_raw[self._num_raw]])):
+            minibatch_inds.append(self._db.train_classified_ind[self._perm_raw[self._num_raw]][self._perm_classified[self._perm_raw[self._num_raw]][i]])
+        #minibatch_inds = self._db.train_classified_ind[self._perm_raw[self._num_raw]][self._perm_classified[self._perm_raw[self._num_raw]][self._cur:self._cur + cfg.TRAIN.BATCH_SIZE]]
         self._cur += cfg.TRAIN.BATCH_SIZE
         return minibatch_inds
 
@@ -137,15 +156,13 @@ class BlobFetcher(Process):
         while True:
             minibatch_inds = self._get_next_minibatch_inds()
             minibatch_img_paths = \
-                [self._db.get_img_path(self._db.train_ind[
-                    i if i < len(self._db.train_ind) else i - len(self._db.train_ind)])
+                [self._db.get_img_path(self._db.train_ind[i])
                  for i in minibatch_inds]
             minibatch_labels = \
-                [self._db.labels[self._db.train_ind[
-                     i if i < len(self._db.train_ind) else i - len(self._db.train_ind)]]
+                [self._db.labels[self._db.train_ind[i]]
                  for i in minibatch_inds]
             minibatch_flip = \
-                [0 if i < len(self._db.train_ind) else 1
-                 for i in minibatch_inds]
-            blobs = get_minibatch(minibatch_img_paths, minibatch_labels, minibatch_flip, self._db.flip_attr_pairs, self._weight)
+                np.random.random_integers(0, 1, len(minibatch_inds))
+            blobs = get_minibatch(minibatch_img_paths, minibatch_labels, minibatch_flip, self._db.flip_attr_pairs,
+                                  self._weight)
             self._queue.put(blobs)
