@@ -92,6 +92,7 @@ class RAP:
             if self.size_ratio_tmp > 20:
                 self.size_ratio_tmp = 20
             self.train_ind[int(self.size_ratio_tmp)].append(self.train_full_ind[i])
+            print i
         print
         print
         for i in range(0, 21):
