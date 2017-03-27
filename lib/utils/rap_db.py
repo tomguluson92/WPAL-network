@@ -91,7 +91,7 @@ class RAP:
             self.size_ratio_tmp = round(float(self.height) / float(self.width))
             if self.size_ratio_tmp > 10:
                 self.size_ratio_tmp = 10
-            self.train_classified_ind[int(self.size_ratio_tmp)].append(self.train_ind[i])
+            self.train_classified_ind[int(self.size_ratio_tmp)].append(i)
             print i
         print
         print
