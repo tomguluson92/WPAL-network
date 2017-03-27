@@ -55,8 +55,8 @@ def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size):
     # Resize the sample.
     img_new_width = math.sqrt(float(max_area)/float(img_ratio))
     img_new_height = img_ratio * img_new_width
-    img_scale[0] = img_new_height/img_height
-    img_scale[1] = img_new_width/img_width
+    img_scale.append(img_new_height/img_height)
+    img_scale.append(img_new_width/img_width)
     img = cv2.resize(img, None, None, fx=img_scale[1], fy=img_scale[0], interpolation=cv2.INTER_LINEAR)
 
     # Randomly rotate the sample.
