@@ -22,6 +22,8 @@
 # --------------------------------------------------------------------
 
 import os.path as osp
+import cv2
+
 import numpy as np
 import scipy.io as sio
 
@@ -58,7 +60,15 @@ class RAP:
         self.labels = np.array([[0.5 if x == 2 else x for x in line] for line in self.labels])
 
         self.test_ind = None
-        self.train_ind = None
+        self.train_full_ind = None
+        self.train_ind = []
+        self.path_tmp = None
+        self.img_tmp = None
+        self.height = None
+        self.width = None
+        self.size_ratio_tmp = None
+        for i in xrange(21):
+            self.train_ind.append([])
         self.label_weight = None
         self.set_partition_set_id(par_set_id)
 
@@ -73,7 +83,21 @@ class RAP:
         return evaluate.example_based(cut_attr, cut_gt)
 
     def set_partition_set_id(self, par_set_id):
-        self.train_ind = self._partition[par_set_id][0][0][0][0][0] - 1
+        self.train_full_ind = self._partition[par_set_id][0][0][0][0][0] - 1
+        for i in range(0, len(self.train_full_ind)):
+            self.path_tmp = self.get_img_path(self.train_full_ind[i])
+            self.img_tmp = cv2.imread(self.path_tmp)
+            self.height, self.width = self.img_tmp.shape[:2]
+            self.size_ratio_tmp = round(float(self.height) / float(self.width))
+            if self.size_ratio_tmp > 20:
+                self.size_ratio_tmp = 20
+            self.train_ind[int(self.size_ratio_tmp)].append(self.train_full_ind[i])
+        print
+        print
+        for i in range(0, 21):
+            print "ratio = %d , pictures_num =%d\n" % (i, len(self.train_ind[i]))
+        print
+        print
         self.test_ind = self._partition[par_set_id][0][0][0][1][0] - 1
         pos_cnt = sum(self.labels[self.train_ind])
         self.label_weight = pos_cnt / self.train_ind.size

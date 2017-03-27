@@ -120,7 +120,7 @@ class BlobFetcher(Process):
 
     def _shuffle_train_inds(self):
         """Randomly permute the training database."""
-        self._perm = np.random.permutation(xrange(len(self._train_ind * (2 if self._do_flip else 1))))
+        self._perm = np.random.permutation(xrange(len(self._train_ind[2]) * (2 if self._do_flip else 1)))
         self._cur = 0
 
     def _get_next_minibatch_inds(self):
