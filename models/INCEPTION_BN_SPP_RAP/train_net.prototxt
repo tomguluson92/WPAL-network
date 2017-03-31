@@ -1154,6 +1154,19 @@ layer {
 }
 
 layer {
+  name: "max_pool_3c_3x3_pool"
+  type: "Pooling"
+  bottom: "conv_3c_3x3"
+  top: "max_pool_3c_3x3_pool"
+  pooling_param {
+     pool: MAX
+     kernel_size: 3
+     stride: 2
+     pad: 0
+  }
+}
+
+layer {
   name: "conv_3c_double_3x3_reduce"
   type: "Convolution"
   bottom: "ch_concat_3b_chconcat"
@@ -1319,6 +1332,19 @@ layer {
 }
 
 layer {
+  name: "max_pool_3c_double3x3_pool"
+  type: "Pooling"
+  bottom: "conv_3c_double_3x3_1"
+  top: "max_pool_3c_double3x3_pool"
+  pooling_param {
+     pool: MAX
+     kernel_size: 3
+     stride: 2
+     pad: 0
+  }
+}
+
+layer {
   name: "max_pool_3c_pool"
   type: "Pooling"
   bottom: "ch_concat_3b_chconcat"
@@ -1334,8 +1360,8 @@ layer {
 layer {
   name: "ch_concat_3c_chconcat"
   type: "Concat"
-  bottom: "conv_3c_3x3"
-  bottom: "conv_3c_double_3x3_1"
+  bottom: "max_pool_3c_3x3_pool"
+  bottom: "max_pool_3c_double3x3_pool"
   bottom: "max_pool_3c_pool"
   top: "ch_concat_3c_chconcat"
 }
@@ -3081,6 +3107,18 @@ layer {
   bottom: "conv_4e_3x3"
   top: "conv_4e_3x3"
 }
+layer {
+  name: "max_pool_4e_3x3_pool"
+  type: "Pooling"
+  bottom: "conv_4e_3x3"
+  top: "max_pool_4e_3x3_pool"
+  pooling_param {
+     pool: MAX
+     kernel_size: 3
+     stride: 2
+     pad: 0
+  }
+}
 
 layer {
   name: "conv_4e_double_3x3_reduce"
@@ -3248,6 +3286,19 @@ layer {
 }
 
 layer {
+  name: "max_pool_4e_double3x3_pool"
+  type: "Pooling"
+  bottom: "conv_4e_double_3x3_1"
+  top: "max_pool_4e_double3x3_pool"
+  pooling_param {
+     pool: MAX
+     kernel_size: 3
+     stride: 2
+     pad: 0
+  }
+}
+
+layer {
   name: "max_pool_4e_pool"
   type: "Pooling"
   bottom: "ch_concat_4d_chconcat"
@@ -3263,8 +3314,8 @@ layer {
 layer {
   name: "ch_concat_4e_chconcat"
   type: "Concat"
-  bottom: "conv_4e_3x3"
-  bottom: "conv_4e_double_3x3_1"
+  bottom: "max_pool_4e_3x3_pool"
+  bottom: "max_pool_4e_double3x3_pool"
   bottom: "max_pool_4e_pool"
   top: "ch_concat_4e_chconcat"
 }
