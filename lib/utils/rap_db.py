@@ -92,13 +92,6 @@ class RAP:
             if self.size_ratio_tmp > 10:
                 self.size_ratio_tmp = 10
             self.train_classified_ind[int(self.size_ratio_tmp)].append(i)
-            print i
-        print
-        print
-        for i in range(0, 11):
-            print "ratio = %d , pictures_num =%d\n" % (i, len(self.train_classified_ind[i]))
-        print
-        print
         self.test_ind = self._partition[par_set_id][0][0][0][1][0] - 1
         pos_cnt = sum(self.labels[self.train_ind])
         self.label_weight = pos_cnt / self.train_ind.size
