@@ -66,7 +66,7 @@ class DataLayer(caffe.Layer):
 
         # data blob: holds a batch of N images, each with 3 channels
         idx = 0
-        top[idx].reshape(cfg.TRAIN.BATCH_SIZE, 3, max(cfg.TRAIN.SCALES), max(cfg.TRAIN.SCALES))
+        top[idx].reshape(cfg.TRAIN.BATCH_SIZE, 3, 224, 224)
         self._name_to_top_map['data'] = idx
         idx += 1
 
