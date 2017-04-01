@@ -25,7 +25,7 @@ net: "models/INCEPTION_BN_SPP_RAP/train_net.prototxt"
 #test_initialization: false
 display: 40
 average_loss: 40
-base_lr: 0.045
+base_lr: 0.001
 lr_policy: "step"
 stepsize: 6400
 gamma: 0.96
