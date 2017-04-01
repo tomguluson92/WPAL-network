@@ -140,6 +140,8 @@ class BlobFetcher(Process):
         while self._cur >= len(self._db.train_classified_ind[self._perm_raw[self._num_raw]]):
         # if self._cur >= len(self._db.train_classified_ind[self._perm_raw[self._num_raw]]):
             self._num_raw += 1
+            if self._num_raw > 10:
+                break
             self._cur = 0
         if self._num_raw > 10:
             self._shuffle_train_inds()
