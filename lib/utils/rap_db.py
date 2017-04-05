@@ -98,7 +98,7 @@ class RAP:
         print "The size of database is %d. " % (len(self.train_ind))
         for i in xrange(11):
             print "The class %d includes %d pictures. " % (i, len(self.train_classified_pre[i]))
-        sum = 0
+        sumsize = 0
         l = len(self.train_classified_pre) - 1
         while l > -1:
             if len(self.train_classified_pre[l]) == 0:
@@ -108,9 +108,9 @@ class RAP:
                 break
         for i in range(l + 1):
             self.train_classified_b.append(self.train_classified_pre[i])
-            sum += len(self.train_classified_b[i])
+            sumsize += len(self.train_classified_b[i])
         batch = 16
-        if sum < batch:
+        if sumsize < batch:
             print "The Size of database is smaller than the batch size you set, try to re-set the param: Batch_Size"
             self.train_classified_ind = self.train_classified_b
         else:

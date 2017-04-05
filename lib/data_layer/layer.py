@@ -159,9 +159,14 @@ class BlobFetcher(Process):
         print 'BlobFetcher started'
         while True:
             minibatch_inds, img_ratio = self._get_next_minibatch_inds()
+
             if len(minibatch_inds) < 16:
                 continue
+
             print "The ratio of this blob is: %d" % img_ratio
+            print "minibatch"
+            print minibatch_inds
+            print
             minibatch_img_paths = \
                 [self._db.get_img_path(self._db.train_ind[i])
                  for i in minibatch_inds]
