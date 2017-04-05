@@ -30,7 +30,7 @@ from utils.blob import img_list_to_blob, prep_img_for_blob
 from wpal_net.config import cfg
 
 
-def get_minibatch(img_paths, labels, flip, flip_attr_pairs, weight):
+def get_minibatch(img_paths, labels, flip, flip_attr_pairs, weight, img_ratio):
     """Construct a minibatch with given image paths and corresponding labels."""
     num_images = len(img_paths)
 
@@ -39,7 +39,7 @@ def get_minibatch(img_paths, labels, flip, flip_attr_pairs, weight):
                                     size=num_images)
 
     # Get the input image blob, formatted for caffe
-    img_blob = _get_image_blob(img_paths, random_scale_inds, flip)
+    img_blob = _get_image_blob(img_paths, random_scale_inds, flip, img_ratio)
     attr_blob = _get_attr_blob(labels, flip, flip_attr_pairs)
     weight_blob = _get_weight_blob(labels, weight)
 
@@ -83,7 +83,7 @@ def _get_attr_blob(labels, flip, flip_attr_pairs):
     return blob
 
 
-def _get_image_blob(img_paths, scale_inds, flip):
+def _get_image_blob(img_paths, scale_inds, flip, img_ratio):
     """Builds an input blob from the images at the specified
     scales.
     """
@@ -96,7 +96,7 @@ def _get_image_blob(img_paths, scale_inds, flip):
             img = cv2.flip(img, 1)
         target_size = cfg.TRAIN.SCALES[scale_inds[i]]
         img = prep_img_for_blob(img, cfg.PIXEL_MEANS, target_size,
-                                cfg.TRAIN.MAX_AREA, cfg.MIN_SIZE)
+                                cfg.TRAIN.MAX_AREA, cfg.MIN_SIZE, img_ratio)
         processed_imgs.append(img)
 
     # Create a blob to hold the input images

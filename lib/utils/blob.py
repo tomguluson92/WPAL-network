@@ -32,14 +32,14 @@ def img_list_to_blob(images):
     return blob
 
 
-def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size):
+def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size, img_ratio):
     """Mean subtract and scale an image for use in a blob."""
     img = img.astype(np.float32, copy=False)
     img -= pixel_means
     img_shape = img.shape
     img_height, img_width = img_shape[:2]
     img_scale = []
-    img_ratio = round(float(img_height) / float(img_width))
+    #img_ratio = round(float(img_height) / float(img_width))
     #img_size_min = np.min(img_shape[0:2])
     #img_size_max = np.max(img_shape[0:2])
     #img_scale = float(target_size) / float(img_size_max)

@@ -146,18 +146,22 @@ class BlobFetcher(Process):
         if self._num_raw > 10:
             self._shuffle_train_inds()
         minibatch_inds = []
+        ratio = self._perm_raw[self._num_raw]
         for i in range(self._cur, self._cur + cfg.TRAIN.BATCH_SIZE
                        if self._cur+cfg.TRAIN.BATCH_SIZE <= len(self._perm_classified[self._perm_raw[self._num_raw]])
                        else len(self._perm_classified[self._perm_raw[self._num_raw]])):
             minibatch_inds.append(self._db.train_classified_ind[self._perm_raw[self._num_raw]][self._perm_classified[self._perm_raw[self._num_raw]][i]])
         #minibatch_inds = self._db.train_classified_ind[self._perm_raw[self._num_raw]][self._perm_classified[self._perm_raw[self._num_raw]][self._cur:self._cur + cfg.TRAIN.BATCH_SIZE]]
         self._cur += cfg.TRAIN.BATCH_SIZE
-        return minibatch_inds
+        return minibatch_inds, ratio
 
     def run(self):
         print 'BlobFetcher started'
         while True:
-            minibatch_inds = self._get_next_minibatch_inds()
+            minibatch_inds, img_ratio = self._get_next_minibatch_inds()
+            if len(minibatch_inds) < 16:
+                continue
+            print "The ratio of this blob is: %d" % img_ratio
             minibatch_img_paths = \
                 [self._db.get_img_path(self._db.train_ind[i])
                  for i in minibatch_inds]
@@ -167,5 +171,5 @@ class BlobFetcher(Process):
             minibatch_flip = \
                 np.random.random_integers(0, 1, len(minibatch_inds))
             blobs = get_minibatch(minibatch_img_paths, minibatch_labels, minibatch_flip, self._db.flip_attr_pairs,
-                                  self._weight)
+                                  self._weight, img_ratio)
             self._queue.put(blobs)
