@@ -91,6 +91,7 @@ class RAP:
             self.img_tmp = cv2.imread(self.path_tmp)
             self.height, self.width = self.img_tmp.shape[:2]
             self.size_ratio_tmp = round(float(self.height) / float(self.width))
+            print i
             #if self.size_ratio_tmp > 10:
             #   self.size_ratio_tmp = 10
             self.train_classified_pre[int(self.size_ratio_tmp)].append(i)
