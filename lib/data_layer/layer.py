@@ -128,9 +128,9 @@ class BlobFetcher(Process):
     def _shuffle_train_inds(self):
         """Randomly permute the training database."""
 
-        for i in range(0, 11):
+        for i in xrange(len(self._train_classified_ind)):
             self._perm_classified[i] = np.random.permutation(xrange(len(self._train_classified_ind[i])))
-        self._perm_raw = np.random.permutation(xrange(11))
+        self._perm_raw = np.random.permutation(xrange(len(self._train_classified_ind)))
         # self._perm = np.random.permutation(xrange(len(self._train_ind[2]) * (2 if self._do_flip else 1)))
         self._cur = 0
         self._num_raw = 0
@@ -140,10 +140,10 @@ class BlobFetcher(Process):
         while self._cur >= len(self._db.train_classified_ind[self._perm_raw[self._num_raw]]):
         # if self._cur >= len(self._db.train_classified_ind[self._perm_raw[self._num_raw]]):
             self._num_raw += 1
-            if self._num_raw > 10:
+            if self._num_raw >= len(self._train_classified_ind):
                 break
             self._cur = 0
-        if self._num_raw > 10:
+        if self._num_raw >= len(self._train_classified_ind):
             self._shuffle_train_inds()
         minibatch_inds = []
         ratio = self._perm_raw[self._num_raw]
