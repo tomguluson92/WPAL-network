@@ -164,7 +164,7 @@ class BlobFetcher(Process):
                 continue
 
             #print "The ratio of this blob is: %d" % img_ratio
-            print "Size of minibatch %d" % len(minibatch_inds)
+            #print "Size of minibatch %d" % len(minibatch_inds)
             #print minibatch_inds
             #print
             minibatch_img_paths = \
