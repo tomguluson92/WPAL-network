@@ -3089,7 +3089,7 @@ layer {
 }
 ########################## Feature Transform Conv Layers ##########################
 layer {
-  bottom: "inception_4a/output"
+  bottom: "ch_concat_4a_chconcat"
   top: "conv3_e"
   name: "conv3_e"
   type: "Convolution"
@@ -3109,7 +3109,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 512
+    num_output: 256
     pad: 1
     kernel_size: 3
   }
@@ -3121,7 +3121,7 @@ layer {
   type: "ReLU"
 }
 layer {
-  bottom: "inception_4d/output"
+  bottom: "ch_concat_4d_chconcat"
   top: "conv4_e"
   name: "conv4_e"
   type: "Convolution"
@@ -3141,7 +3141,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 512
+    num_output: 256
     pad: 1
     kernel_size: 3
   }
@@ -3153,7 +3153,7 @@ layer {
   type: "ReLU"
 }
 layer {
-  bottom: "inception_5b/output"
+  bottom: "ch_concat_5b_chconcat"
   top: "conv5_e"
   name: "conv5_e"
   type: "Convolution"
@@ -3173,7 +3173,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 1024
+    num_output: 512
     pad: 1
     kernel_size: 3
   }
@@ -3200,6 +3200,15 @@ layer {
   }
 }
 layer {
+  bottom: "spp3"
+  top: "spp3"
+  name: "drop_spp3"
+  type: "Dropout"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
   bottom: "conv4_e"
   top: "spp4"
   name: "spp4"
@@ -3214,6 +3223,15 @@ layer {
   }
 }
 layer {
+  bottom: "spp4"
+  top: "spp4"
+  name: "drop_spp4"
+  type: "Dropout"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
   bottom: "conv5_e"
   top: "spp5"
   name: "spp5"
@@ -3225,6 +3243,15 @@ layer {
     overlap_ratio_h: 0.1
     fineness_w: 1
     overlap_ratio_w: 0.1
+  }
+}
+layer {
+  bottom: "spp5"
+  top: "spp5"
+  name: "drop_spp5"
+  type: "Dropout"
+  dropout_param {
+    dropout_ratio: 0.5
   }
 }
 ########################## Independent FC Layers ##########################
@@ -3250,7 +3277,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 512
+    num_output: 256
   }
 }
 layer {
@@ -3290,7 +3317,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 512
+    num_output: 256
   }
 }
 layer {
@@ -3330,7 +3357,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 1024
+    num_output: 512
   }
 }
 layer {
@@ -3379,7 +3406,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 2048
+    num_output: 1024
   }
 }
 layer {
