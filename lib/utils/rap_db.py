@@ -110,7 +110,7 @@ class RAP:
         for i in range(l + 1):
             self.train_classified_b.append(self.train_classified_pre[i])
             sumsize += len(self.train_classified_b[i])
-        batch = 16
+        batch = cfg.TRAIN.BATCH_SIZE
         if sumsize < batch:
             print "The Size of database is smaller than the batch size you set, try to re-set the param: Batch_Size"
             self.train_classified_ind = self.train_classified_b
