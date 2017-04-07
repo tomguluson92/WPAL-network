@@ -160,11 +160,11 @@ class BlobFetcher(Process):
         while True:
             minibatch_inds, img_ratio = self._get_next_minibatch_inds()
 
-            if len(minibatch_inds) < 16:
+            if len(minibatch_inds) < cfg.TRAIN.BATCH_SIZE:
                 continue
 
             #print "The ratio of this blob is: %d" % img_ratio
-            #print "minibatch"
+            print "Size of minibatch" % len(minibatch_inds)
             #print minibatch_inds
             #print
             minibatch_img_paths = \

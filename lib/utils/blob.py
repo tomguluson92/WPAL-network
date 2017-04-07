@@ -53,12 +53,12 @@ def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size, img_rat
     #    img_scale = math.sqrt(float(max_area) / float(img_size_min * img_size_max))
 
     # Resize the sample.
-    img_new_width = math.sqrt(float(max_area)/float(img_ratio))
-    img_new_height = img_ratio * img_new_width
-    img_scale.append(img_new_height/img_height)
-    img_scale.append(img_new_width/img_width)
-    img = cv2.resize(img, None, None, fx=img_scale[1], fy=img_scale[0], interpolation=cv2.INTER_LINEAR)
-
+    img_new_width = int(math.sqrt(float(max_area)/float(img_ratio)))
+    img_new_height = int(img_ratio * img_new_width)
+    #img_scale.append(img_new_height/img_height)
+    #img_scale.append(img_new_width/img_width)
+    #img = cv2.resize(img, None, None, fx=img_scale[1], fy=img_scale[0], interpolation=cv2.INTER_LINEAR)
+    img = cv2.resize(img,(img_new_width, img_new_height), interpolation=cv2.INTER_LINEAR)
     # Randomly rotate the sample.
     img = cv2.warpAffine(img,
                          cv2.getRotationMatrix2D((img.shape[1] / 2, img.shape[0] / 2),

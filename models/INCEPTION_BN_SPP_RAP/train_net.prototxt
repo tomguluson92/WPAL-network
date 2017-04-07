@@ -4157,7 +4157,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 256
+    num_output: 512
     pad: 1
     kernel_size: 3
   }
@@ -4189,7 +4189,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 256
+    num_output: 512
     pad: 1
     kernel_size: 3
   }
@@ -4221,7 +4221,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 512
+    num_output: 1024
     pad: 1
     kernel_size: 3
   }
@@ -4325,7 +4325,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 256
+    num_output: 512
   }
 }
 layer {
@@ -4365,7 +4365,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 256
+    num_output: 512
   }
 }
 layer {
@@ -4405,7 +4405,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 512
+    num_output: 1024
   }
 }
 layer {
@@ -4454,7 +4454,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 1024
+    num_output: 2048
   }
 }
 layer {
