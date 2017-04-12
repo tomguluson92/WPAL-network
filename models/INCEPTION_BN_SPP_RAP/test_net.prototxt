@@ -4153,7 +4153,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 256
+    num_output: 512
     pad: 1
     kernel_size: 3
   }
@@ -4185,7 +4185,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 256
+    num_output: 512
     pad: 1
     kernel_size: 3
   }
@@ -4217,7 +4217,7 @@ layer {
         type: "constant"
         value: 0
     }
-    num_output: 512
+    num_output: 1024
     pad: 1
     kernel_size: 3
   }
@@ -4244,15 +4244,6 @@ layer {
   }
 }
 layer {
-  bottom: "spp3"
-  top: "spp3"
-  name: "drop_spp3"
-  type: "Dropout"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
-}
-layer {
   bottom: "conv4_e"
   top: "spp4"
   name: "spp4"
@@ -4267,15 +4258,6 @@ layer {
   }
 }
 layer {
-  bottom: "spp4"
-  top: "spp4"
-  name: "drop_spp4"
-  type: "Dropout"
-  dropout_param {
-    dropout_ratio: 0.5
-  }
-}
-layer {
   bottom: "conv5_e"
   top: "spp5"
   name: "spp5"
@@ -4287,15 +4269,6 @@ layer {
     overlap_ratio_h: 0.1
     fineness_w: 1
     overlap_ratio_w: 0.1
-  }
-}
-layer {
-  bottom: "spp5"
-  top: "spp5"
-  name: "drop_spp5"
-  type: "Dropout"
-  dropout_param {
-    dropout_ratio: 0.5
   }
 }
 ########################## Independent FC Layers ##########################
@@ -4321,7 +4294,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 256
+    num_output: 512
   }
 }
 layer {
@@ -4361,7 +4334,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 256
+    num_output: 512
   }
 }
 layer {
@@ -4401,7 +4374,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 512
+    num_output: 1024
   }
 }
 layer {
@@ -4450,7 +4423,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 1024
+    num_output: 2048
   }
 }
 layer {
