@@ -52,7 +52,7 @@ __C.TRAIN = edict()
 __C.TRAIN.SCALES = (384, 400, 416, 432, 448, 464, 480, 496, 512)
 
 # Max pixel area size of a scaled input image
-__C.TRAIN.MAX_AREA = 50000
+__C.TRAIN.MAX_AREA = 40000
 
 # Minibatch size (number of samples per round)
 __C.TRAIN.BATCH_SIZE = 16
