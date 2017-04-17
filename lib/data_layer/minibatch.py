@@ -38,9 +38,7 @@ def get_minibatch(img_paths, labels, flip, flip_attr_pairs, weight, img_ratio):
     random_scale_inds = npr.randint(0, high=len(cfg.TRAIN.SCALES),
                                     size=num_images)
     ran = random.uniform(0.1, 0.2)
-    print " i = %d, rand = %f" % (i, ran)
     a = random.randint(-1, 1)
-    print "a = %d" % a
     random_scale = 1 + ran * a
 
     # Get the input image blob, formatted for caffe
