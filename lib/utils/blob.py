@@ -31,14 +31,12 @@ def img_list_to_blob(images):
     blob = blob.transpose(channel_swap)
     return blob
 
-
-def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size, img_ratio):
+def prep_img_for_blob(img, pixel_means, random_scale, max_area, min_size, img_ratio):
     """Mean subtract and scale an image for use in a blob."""
     img = img.astype(np.float32, copy=False)
     img -= pixel_means
     img_shape = img.shape
     img_height, img_width = img_shape[:2]
-    img_scale = []
     #img_ratio = round(float(img_height) / float(img_width))
     #img_size_min = np.min(img_shape[0:2])
     #img_size_max = np.max(img_shape[0:2])
@@ -55,15 +53,16 @@ def prep_img_for_blob(img, pixel_means, target_size, max_area, min_size, img_rat
     # Resize the sample.
     img_new_width = int(math.sqrt(float(max_area)/float(img_ratio)))
     img_new_height = int(img_ratio * img_new_width)
-    #img_scale.append(img_new_height/img_height)
-    #img_scale.append(img_new_width/img_width)
-    #img = cv2.resize(img, None, None, fx=img_scale[1], fy=img_scale[0], interpolation=cv2.INTER_LINEAR)
     img = cv2.resize(img,(img_new_width, img_new_height), interpolation=cv2.INTER_LINEAR)
+
     # Randomly rotate the sample.
     img = cv2.warpAffine(img,
                          cv2.getRotationMatrix2D((img.shape[1] / 2, img.shape[0] / 2),
                                                  np.random.randint(-15, 15), 1),
                          (img.shape[1], img.shape[0]))
+
+    # Randomly re-scale the sample with the same scale as others in the same batch
+    img = cv2.resize(img, None, None, fx=random_scale, fy=random_scale, interpolation=cv2.INTER_LINEAR)
 
     # Perform RGB Jittering
     h, w, c = img.shape

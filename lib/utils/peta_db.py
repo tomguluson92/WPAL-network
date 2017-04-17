@@ -22,7 +22,8 @@
 # --------------------------------------------------------------------
 
 import os.path as osp
-
+import cv2
+from wpal_net.config import cfg
 import numpy as np
 import scipy.io as sio
 
@@ -76,6 +77,66 @@ class PETA:
         #self.train_ind = self._partition[par_set_id][0][0][0][0][0] - 1
         #self.test_ind = self._partition[par_set_id][0][0][0][1][0] - 1
         self.train_ind = filter(lambda x:x%5!=par_set_id, xrange(self.labels.shape[0]))
+         
+        for i in range(0, len(self.train_ind)):
+            self.path_tmp = self.get_img_path(self.train_ind[i])
+            self.img_tmp = cv2.imread(self.path_tmp)
+            self.height, self.width = self.img_tmp.shape[:2]
+            self.size_ratio_tmp = round(float(self.height) / float(self.width))
+            if i%1000 == 0:
+                print i
+            if self.size_ratio_tmp > 10:
+               self.size_ratio_tmp = 10
+            self.train_classified_pre[int(self.size_ratio_tmp)].append(i)
+        print "The size of database is %d. " % (len(self.train_ind))
+        for i in xrange(11):
+            print "The class %d includes %d pictures. " % (i, len(self.train_classified_pre[i]))
+        sumsize = 0
+        l = len(self.train_classified_pre) - 1
+        while l > -1:
+            if len(self.train_classified_pre[l]) == 0:
+                l -= 1
+                continue
+            else:
+                break
+        for i in range(l + 1):
+            self.train_classified_b.append(self.train_classified_pre[i])
+            sumsize += len(self.train_classified_b[i])
+        batch = cfg.TRAIN.BATCH_SIZE
+        if sumsize < batch:
+            print "The Size of database is smaller than the batch size you set, try to re-set the param: Batch_Size"
+            self.train_classified_ind = self.train_classified_b
+        else:
+            i = len(self.train_classified_b) - 1
+            while i > -1:
+                if batch > len(self.train_classified_b[i]) != 0:
+                    if i > 1:
+                        for j in xrange(len(self.train_classified_b[i])):
+                            self.train_classified_b[i - 1].append(self.train_classified_b[i][j])
+                        self.train_classified_b[i] = []
+                    if i == 1:
+                        for j in xrange(len(self.train_classified_b[i])):
+                            self.train_classified_b[i + 1].append(self.train_classified_b[i][j])
+                        self.train_classified_b[i] = []
+                i -= 1
+                if i == -1:
+                    length = len(self.train_classified_b)
+                    l = length - 1
+                    while l > -1:
+                        if len(self.train_classified_b[l]) == 0:
+                            l -= 1
+                            continue
+                        else:
+                            length = l + 1
+                            break
+                    for x in xrange(length):
+                        if len(self.train_classified_b[x]) < batch and len(self.train_classified_b[x]) != 0:
+                            i = length - 1
+                            break
+            for i in xrange(length):
+                self.train_classified_ind.append(self.train_classified_b[i])
+                print "The class %d in Ind includes %d pics." % (i, len(self.train_classified_ind[i]))
+
         self.test_ind = filter(lambda x:x%5==par_set_id, xrange(self.labels.shape[0]))
         
         pos_cnt = sum(self.labels[self.train_ind])

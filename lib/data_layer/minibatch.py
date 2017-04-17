@@ -22,7 +22,7 @@
 # --------------------------------------------------------------------
 
 """Compute minibatch blobs for training an WPAL Network."""
-
+import random
 import cv2
 import numpy as np
 import numpy.random as npr
@@ -37,9 +37,14 @@ def get_minibatch(img_paths, labels, flip, flip_attr_pairs, weight, img_ratio):
     # Sample random scales to use for each image in this batch
     random_scale_inds = npr.randint(0, high=len(cfg.TRAIN.SCALES),
                                     size=num_images)
+    ran = random.uniform(0.1, 0.2)
+    print " i = %d, rand = %f" % (i, ran)
+    a = random.randint(-1, 1)
+    print "a = %d" % a
+    random_scale = 1 + ran * a
 
     # Get the input image blob, formatted for caffe
-    img_blob = _get_image_blob(img_paths, random_scale_inds, flip, img_ratio)
+    img_blob = _get_image_blob(img_paths, random_scale, flip, img_ratio)
     attr_blob = _get_attr_blob(labels, flip, flip_attr_pairs)
     weight_blob = _get_weight_blob(labels, weight)
 
@@ -83,7 +88,7 @@ def _get_attr_blob(labels, flip, flip_attr_pairs):
     return blob
 
 
-def _get_image_blob(img_paths, scale_inds, flip, img_ratio):
+def _get_image_blob(img_paths, random_scale, flip, img_ratio):
     """Builds an input blob from the images at the specified
     scales.
     """
@@ -94,8 +99,8 @@ def _get_image_blob(img_paths, scale_inds, flip, img_ratio):
         """Flip the image if required."""
         if flip[i]:
             img = cv2.flip(img, 1)
-        target_size = cfg.TRAIN.SCALES[scale_inds[i]]
-        img = prep_img_for_blob(img, cfg.PIXEL_MEANS, target_size,
+        #target_size = cfg.TRAIN.SCALES[scale_inds[i]]
+        img = prep_img_for_blob(img, cfg.PIXEL_MEANS, random_scale,
                                 cfg.TRAIN.MAX_AREA, cfg.MIN_SIZE, img_ratio)
         processed_imgs.append(img)
 
