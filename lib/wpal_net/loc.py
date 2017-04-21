@@ -280,9 +280,11 @@ def locate(img_ind, scaled_img,
             if 8 < attr_id < 35 or attr_id == 43:
                 if len(suitable_contours) != 0:
                     xa1, ya1, pw, ph = db.position[int(img_ind)][
-                                       4 * int(db.attr_position_ind[attr_id]):4 * int(db.attr_position_ind[attr_id]) + 4]
+                                       4 * int(db.attr_position_ind[attr_id]):4 * int(
+                                           db.attr_position_ind[attr_id]) + 4]
                     xa2 = xa1 + pw
                     ya2 = ya1 + ph
+                    print "xa1 = %d, ya1 = %d, pw = %d, ph = %d" % (xa1, ya1, pw, ph)
                     overlap = 0.0
                     findarea = 0.0
                     originarea = 0.0
@@ -298,7 +300,7 @@ def locate(img_ind, scaled_img,
                             xc2 = min(xa2, xb2)
                             yc2 = max(ya2, yb2)
                             overlap += (xc2 - xc1) * (yc2 - yc1)
-                    iou = float(overlap)/float(findarea)
+                    iou = float(overlap) / float(findarea)
                     print "The area of findarea is %d " % findarea
                     print "The area of overlap is %d " % overlap
                     print "iou of attribute %d in img %d is %d" % (attr_id, img_ind, iou)
