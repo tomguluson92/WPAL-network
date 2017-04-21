@@ -287,7 +287,7 @@ def locate(img_ind, scaled_img,
                     findarea = 0.0
                     originarea = 0.0
                     for z in range(0, len(suitable_contours)):
-                        xb1, yb1, cw, ch = cv2.boundingRect(contours[z])
+                        xb1, yb1, cw, ch = cv2.boundingRect(suitable_contours[z])
                         xb2 = xb1 + cw
                         yb2 = yb1 + ch
                         findarea += cw * ch
@@ -299,6 +299,8 @@ def locate(img_ind, scaled_img,
                             yc2 = max(ya2, yb2)
                             overlap += (xc2 - xc1) * (yc2 - yc1)
                     iou = float(overlap)/float(findarea)
+                    print "The area of findarea is %d " % findarea
+                    print "The area of overlap is %d " % overlap
                     print "iou of attribute %d in img %d is %d" % (attr_id, img_ind, iou)
                 else:
                     print "The localization of this attribute failed."
