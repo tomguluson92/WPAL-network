@@ -23,7 +23,7 @@ import numpy as np
 
 from numpy import *
 import time
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 
 # calculate Euclidean distance
@@ -99,13 +99,13 @@ def showCluster(dataSet, k, centroids, clusterAssment):
 		return 1
 
 	# draw all samples
-	for i in xrange(numSamples):
-		markIndex = int(clusterAssment[i, 0])
-		plt.plot(dataSet[i, 0], dataSet[i, 1], mark[markIndex])
+	#for i in xrange(numSamples):
+	#	markIndex = int(clusterAssment[i, 0])
+	#	plt.plot(dataSet[i, 0], dataSet[i, 1], mark[markIndex])
 
-	mark = ['Dr', 'Db', 'Dg', 'Dk', '^b', '+b', 'sb', 'db', '<b', 'pb']
-	# draw the centroids
-	for i in range(k):
-		plt.plot(centroids[i, 0], centroids[i, 1], mark[i], markersize=12)
+	#mark = ['Dr', 'Db', 'Dg', 'Dk', '^b', '+b', 'sb', 'db', '<b', 'pb']
+	## draw the centroids
+	#for i in range(k):
+	#	plt.plot(centroids[i, 0], centroids[i, 1], mark[i], markersize=12)
 
-	plt.show()
+	#plt.show()
