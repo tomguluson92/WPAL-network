@@ -293,13 +293,16 @@ def locate(img_ind, scaled_img,
                         xb2 = xb1 + cw
                         yb2 = yb1 + ch
                         findarea += cw * ch
+                        print "xb1 = %d, yb1 = %d, cw = %d, ch = %d" % (xb1, yb1, cw, ch)
                         if (abs(xb2 + xb1 - xa2 - xa1) <= (xa2 - xa1 + xb2 - xb1)) and (
                                     abs(yb2 + yb1 - ya2 - ya1) <= (ya2 - ya1 + yb2 - yb1)):
                             xc1 = max(xa1, xb1)
                             yc1 = min(ya1, yb1)
                             xc2 = min(xa2, xb2)
                             yc2 = max(ya2, yb2)
-                            overlap += (xc2 - xc1) * (yc2 - yc1)
+                            print "xc1 = %d, yc1 = %d, xc2 = %d, yc2 = %d" % (xc1, yc1,xc2,yc2)
+                            overlap += float(xc2 - xc1) * float(yc2 - yc1)
+                            print "Overlap in process = %f" %overlap
                     iou = float(overlap) / float(findarea)
                     print "The area of findarea is %d " % findarea
                     print "The area of overlap is %d " % overlap
