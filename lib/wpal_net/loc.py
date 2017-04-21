@@ -306,7 +306,7 @@ def locate(img_ind, scaled_img,
                     iou = float(overlap) / float(findarea)
                     print "The area of findarea is %d " % findarea
                     print "The area of overlap is %d " % overlap
-                    print "iou of attribute %d in img %d is %d" % (attr_id, img_ind, iou)
+                    print "iou of attribute %d in img %d is %f" % (attr_id, img_ind, iou)
                 else:
                     print "The localization of this attribute failed."
             else:
