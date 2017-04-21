@@ -279,8 +279,8 @@ def locate(img_ind, scaled_img,
         if attr_id != -1:
             if 8 < attr_id < 35 or attr_id == 43:
                 if len(suitable_contours) != 0:
-                    xa1, ya1, pw, ph = db.position[img_ind][
-                                       4 * db.attr_position_ind[attr_id]:4 * db.attr_position_ind[attr_id] + 4]
+                    xa1, ya1, pw, ph = db.position[int(img_ind)][
+                                       4 * int(db.attr_position_ind[attr_id]):4 * int(db.attr_position_ind[attr_id]) + 4]
                     xa2 = xa1 + pw
                     ya2 = ya1 + ph
                     overlap = 0.0
