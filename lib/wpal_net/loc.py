@@ -285,6 +285,9 @@ def locate(img_ind, scaled_img,
                     xa2 = xa1 + pw
                     ya2 = ya1 + ph
                     print "xa1 = %d, ya1 = %d, pw = %d, ph = %d" % (xa1, ya1, pw, ph)
+                    cv2.rectangle(feature_heat_map_bbox,
+                                  (xa1, ya1), (xa1 + pw, ya1 + ph),
+                                  (0, 255, 0))
                     overlap = 0.0
                     findarea = 0.0
                     originarea = 0.0
@@ -300,9 +303,9 @@ def locate(img_ind, scaled_img,
                             yc1 = min(ya1, yb1)
                             xc2 = min(xa2, xb2)
                             yc2 = max(ya2, yb2)
-                            print "xc1 = %d, yc1 = %d, xc2 = %d, yc2 = %d" % (xc1, yc1,xc2,yc2)
+                            print "xc1 = %d, yc1 = %d, xc2 = %d, yc2 = %d" % (xc1, yc1, xc2, yc2)
                             overlap += float(xc2 - xc1) * float(yc2 - yc1)
-                            print "Overlap in process = %f" %overlap
+                            print "Overlap in process = %f" % overlap
                     iou = float(overlap) / float(findarea)
                     print "The area of findarea is %d " % findarea
                     print "The area of overlap is %d " % overlap
