@@ -78,7 +78,7 @@ def cluster_heat(img, k, stepsX, max_round=1000):
     return centroids
 
 
-def locate(scaled_img,
+def locate(img_ind, scaled_img,
            pos_ave, neg_ave, dweight,
            attr_id,
            db,
@@ -170,6 +170,8 @@ def locate(scaled_img,
     target = [find_target(j) for j in xrange(len(score))]
 
     canvas = np.array(scaled_img)
+    feature_heat_map = np.array(scaled_img)
+    feature_heat_map_bbox = np.array(scaled_img)
 
     # calc the actual contribution weights
     def w_func(x):
@@ -252,17 +254,71 @@ def locate(scaled_img,
                 canvas[j][k][2] = min(255, max(0, canvas[j][k][2] + max(0, act_map[j][k])))
                 canvas[j][k][1] = min(255, max(0, canvas[j][k][1]))
                 canvas[j][k][0] = min(255, max(0, canvas[j][k][0]))
+                feature_heat_map[j][k][2] = min(255, max(0, max(0, act_map[j][k])))
+                feature_heat_map[j][k][1] = 0
+                feature_heat_map[j][k][0] = 0
         canvas = canvas.astype('uint8')
 
+        feature_heat_map = feature_heat_map.astype('uint8')
+        feature_heat_map_bbox = feature_heat_map_bbox.astype('uint8')
+
+        feature_heat_map_gray = cv2.cvtColor(feature_heat_map, cv2.COLOR_BGR2GRAY)
+        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 25, 255, cv2.THRESH_BINARY)
+        binary = feature_heat_map_binary
+        contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        suitable_contours = []
+        for j in range(0, len(contours)):
+            featurex, featurey, featurew, featureh = cv2.boundingRect(contours[j])
+            for c in centroids[:expected_num_centroids]:
+                if 0 < (c[0] - featurex) < featurew and 0 < (c[1] - featurey) < featureh:
+                    suitable_contours.append(contours[j])
+                    cv2.rectangle(feature_heat_map_bbox,
+                                  (featurex, featurey), (featurex + featurew, featurey + featureh),
+                                  (0, 0, 255))
+                    break
+        if attr_id != -1:
+            if 8 < attr_id < 35 or attr_id == 43:
+                if len(suitable_contours) != 0:
+                    xa1, ya1, pw, ph = db.position[img_ind][
+                                       4 * db.attr_position_ind[attr_id]:4 * db.attr_position_ind[attr_id] + 4]
+                    xa2 = xa1 + pw
+                    ya2 = ya1 + ph
+                    overlap = 0.0
+                    findarea = 0.0
+                    originarea = 0.0
+                    for z in range(0, len(suitable_contours)):
+                        xb1, yb1, cw, ch = cv2.boundingRect(contours[z])
+                        xb2 = xb1 + cw
+                        yb2 = yb1 + ch
+                        findarea += cw * ch
+                        if (abs(xb2 + xb1 - xa2 - xa1) <= (xa2 - xa1 + xb2 - xb1)) and (
+                                    abs(yb2 + yb1 - ya2 - ya1) <= (ya2 - ya1 + yb2 - yb1)):
+                            xc1 = max(xa1, xb1)
+                            yc1 = min(ya1, yb1)
+                            xc2 = min(xa2, xb2)
+                            yc2 = max(ya2, yb2)
+                            overlap += (xc2 - xc1) * (yc2 - yc1)
+                    iou = float(overlap)/float(findarea)
+                    print "iou of attribute %d in img %d is %d" % (attr_id, img_ind, iou)
+                else:
+                    print "The localization of this attribute failed."
+            else:
+                print "This attribute is not in the scope of statistics."
     if display:
         cv2.imshow("img", canvas)
         cv2.waitKey(0)
+        if len(suitable_contours) != 0:
+            cv2.imshow("feature bounding boxes", feature_heat_map_bbox)
+            cv2.waitKey(0)
     if vis_img_dir is not None:
         print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
         cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
-
+        if len(suitable_contours) != 0:
+            print 'Saving to:', os.path.join(vis_img_dir, 'image with feature bounding boxes')
+            cv2.imwrite(os.path.join(vis_img_dir, 'image with feature bounding boxes'), feature_heat_map_bbox)
     cv2.destroyWindow("heat")
     cv2.destroyWindow("img")
+    cv2.destroyWindow("feature bounding boxes")
 
     return superposition, np.array(centroids[:expected_num_centroids])
 
@@ -340,12 +396,12 @@ def test_localization(net,
             if not os.path.exists(vis_img_dir):
                 os.makedirs(vis_img_dir)
 
-            act_map, centroids = locate(img,
+            act_map, centroids = locate(img_ind, img,
                                         pos_ave, neg_ave, dweight,
                                         a,
                                         db,
                                         attr, heat_maps, score,
-                                        display and attr_id != -1,
+                                        False and display and attr_id != -1,
                                         vis_img_dir)
             if attr_id == -1:
                 all_centroids += centroids
@@ -505,7 +561,7 @@ def locate_in_video(net,
                     if attr[attr_id] != 1:
                         continue
                     act_map, centroids = locate(cropped, pos_ave, neg_ave, dweight, attr_id, db,
-                                                      attr, heat_maps, score, display=False)
+                                                attr, heat_maps, score, display=False)
                     act_map = cv2.resize(act_map, (bbox[2], bbox[3]))
                     for x in xrange(bbox[2]):
                         for y in xrange(bbox[3]):

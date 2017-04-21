@@ -49,6 +49,13 @@ class RAP:
 
         self.flip_attr_pairs = [(54, 55)]
 
+        self.attr_position_ind = np.zeros(51)
+        self.attr_position_ind[9:15] = 1
+        self.attr_position_ind[15:24] = 2
+        self.attr_position_ind[24:30] = 3
+        self.attr_position_ind[30:35] = 3
+        self.attr_position_ind[43] = 1
+
         self.expected_loc_centroids = np.ones(self.num_attr, dtype=int) * 2
         self.expected_loc_centroids[9:16] = 1
         self.expected_loc_centroids[35:43] = 1
