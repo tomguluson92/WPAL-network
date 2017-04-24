@@ -297,12 +297,14 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                         print "xb1 = %d, yb1 = %d, cw = %d, ch = %d" % (xb1, yb1, cw, ch)
                         if (abs(xb2 + xb1 - xa2 - xa1) <= (xa2 - xa1 + xb2 - xb1)) and (
                                     abs(yb2 + yb1 - ya2 - ya1) <= (ya2 - ya1 + yb2 - yb1)):
-                            xc1 = max(xa1, xb1)
-                            yc1 = min(ya1, yb1)
-                            xc2 = min(xa2, xb2)
-                            yc2 = max(ya2, yb2)
-                            print "xc1 = %d, yc1 = %d, xc2 = %d, yc2 = %d" % (xc1, yc1, xc2, yc2)
-                            overlap += float(xc2 - xc1) * float(yc2 - yc1)
+                            #   xc1 = max(xa1, xb1)
+                            #   yc1 = min(ya1, yb1)
+                            #   xc2 = min(xa2, xb2)
+                            #   yc2 = max(ya2, yb2)
+                            #   print "xc1 = %d, yc1 = %d, xc2 = %d, yc2 = %d" % (xc1, yc1, xc2, yc2)
+                            recw = (xa2 - xa1) + (xb2 - xb1) - ((max(xa2, xb2)) - min(xa1, xb1))
+                            rech = (ya2 - ya1) + (yb2 - yb1) - ((max(ya2, yb2)) - min(ya1, yb1))
+                            overlap += float(rech) * float(recw)
                             print "Overlap in process = %f" % overlap
                     iou = float(overlap) / float(findarea)
                     print "The area of findarea is %d " % findarea
@@ -407,12 +409,12 @@ def test_localization(net,
             up = low + 4
             bbxx, bbxy, bbxw, bbxh = db.position[int(img_ind)][0:4]
             xa1, ya1, pw, ph = db.position[int(img_ind)][low:up]
-            xa1 = xa1-bbxx
-            xa1 = int(xa1*img_scale)
-            ya1 = ya1-bbxy
-            ya1 = int(ya1*img_scale)
-            pw = int(pw*img_scale)
-            ph = int(ph*img_scale)
+            xa1 = xa1 - bbxx
+            xa1 = int(xa1 * img_scale)
+            ya1 = ya1 - bbxy
+            ya1 = int(ya1 * img_scale)
+            pw = int(pw * img_scale)
+            ph = int(ph * img_scale)
             act_map, centroids = locate(xa1, ya1, pw, ph, img_ind, img,
                                         pos_ave, neg_ave, dweight,
                                         a,
