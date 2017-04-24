@@ -263,7 +263,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         feature_heat_map_bbox = feature_heat_map_bbox.astype('uint8')
 
         feature_heat_map_gray = cv2.cvtColor(feature_heat_map, cv2.COLOR_BGR2GRAY)
-        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 50, 255, cv2.THRESH_BINARY)
+        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 40, 255, cv2.THRESH_BINARY)
         binary = feature_heat_map_binary
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         suitable_contours = []
