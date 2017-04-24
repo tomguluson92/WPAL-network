@@ -62,7 +62,7 @@ def prep_img_for_blob(img, pixel_means, random_scale, max_area, min_size, img_ra
                          (img.shape[1], img.shape[0]))
 
     # Randomly re-scale the sample with the same scale as others in the same batch
-    img = cv2.resize(img, None, None, fx=random_scale, fy=random_scale, interpolation=cv2.INTER_LINEAR)
+    #img = cv2.resize(img, None, None, fx=random_scale, fy=random_scale, interpolation=cv2.INTER_LINEAR)
 
     # Perform RGB Jittering
     h, w, c = img.shape
