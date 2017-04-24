@@ -259,11 +259,14 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                 feature_heat_map[j][k][0] = 0
         canvas = canvas.astype('uint8')
 
+        feature_heat_map_bbox = np.array(canvas)
         feature_heat_map = feature_heat_map.astype('uint8')
         feature_heat_map_bbox = feature_heat_map_bbox.astype('uint8')
 
+        pos_loc_img = 0
+        iou = 0
         feature_heat_map_gray = cv2.cvtColor(feature_heat_map, cv2.COLOR_BGR2GRAY)
-        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 40, 255, cv2.THRESH_BINARY)
+        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 35, 255, cv2.THRESH_BINARY)
         binary = feature_heat_map_binary
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         suitable_contours = []
@@ -305,13 +308,16 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                             recw = (xa2 - xa1) + (xb2 - xb1) - ((max(xa2, xb2)) - min(xa1, xb1))
                             rech = (ya2 - ya1) + (yb2 - yb1) - ((max(ya2, yb2)) - min(ya1, yb1))
                             overlap += float(rech) * float(recw)
+                            pos_loc_img = 1
                             print "Overlap in process = %f" % overlap
+
                     iou = float(overlap) / float(findarea)
                     print "The area of findarea is %d " % findarea
                     print "The area of overlap is %d " % overlap
                     print "iou of attribute %d in img %d is %f" % (attr_id, img_ind, iou)
                 else:
                     print "The localization of this attribute failed."
+                    pos_loc_img = 1
             else:
                 print "This attribute is not in the scope of statistics."
     if display:
@@ -330,7 +336,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     cv2.destroyWindow("img")
     cv2.destroyWindow("feature bounding boxes")
 
-    return superposition, np.array(centroids[:expected_num_centroids])
+    return superposition, np.array(centroids[:expected_num_centroids]), iou, pos_loc_img
 
 
 def test_localization(net,
@@ -341,6 +347,9 @@ def test_localization(net,
                       display=True,
                       max_count=-1):
     """Test localization of a WPAL Network."""
+    iou_all = []
+    for i in range(0, 51):
+        iou_all.append([])
 
     cfg.TEST.MAX_AREA = cfg.TEST.MAX_AREA * 7 / 8
 
@@ -400,6 +409,7 @@ def test_localization(net,
         if attr_id == -1:
             total_superposition = np.zeros(img.shape[0:2], dtype=float)
             all_centroids = []
+
         for a in attr_list:
             # check directory for saving visualization images
             vis_img_dir = os.path.join(output_dir, 'display', db.attr_eng[a][0][0], name)
@@ -415,13 +425,15 @@ def test_localization(net,
             ya1 = int(ya1 * img_scale)
             pw = int(pw * img_scale)
             ph = int(ph * img_scale)
-            act_map, centroids = locate(xa1, ya1, pw, ph, img_ind, img,
-                                        pos_ave, neg_ave, dweight,
-                                        a,
-                                        db,
-                                        attr, heat_maps, score,
-                                        False and display and attr_id != -1,
-                                        vis_img_dir)
+            act_map, centroids, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
+                                                                 pos_ave, neg_ave, dweight,
+                                                                 a,
+                                                                 db,
+                                                                 attr, heat_maps, score,
+                                                                 False and display and attr_id != -1,
+                                                                 vis_img_dir)
+            if pos_loc_img == 1:
+                iou_all[a].append(iou_single)
             if attr_id == -1:
                 all_centroids += centroids
                 total_superposition += act_map * 256 / len(attr_list)
@@ -465,6 +477,16 @@ def test_localization(net,
         cnt += 1
         print 'Localized {} targets!'.format(cnt)
         if cnt >= max_count:
+
+            # Count mean IoU:
+            for i in range(0, len(iou_all)):
+                if len(iou_all[i]) != 0:
+                    iou_single_attr_sum = 0.0
+                    for x in iou_all[i]:
+                        iou_single_attr_sum += x
+                    iou_single_attr_sum /= len(iou_all[i])
+                    print "The mean IoU of %d-th attribute in test images is %f" % (i, iou_single_attr_sum)
+
             break
 
 
