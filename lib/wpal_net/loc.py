@@ -481,6 +481,7 @@ def test_localization(net,
 
             # Count mean IoU:
             for i_iou in range(0, len(iou_all)):
+                print "The %d-th attributes includes %d IoUs" % (i_iou, len(iou_all[i_iou]))
                 if len(iou_all[i_iou]) != 0:
                     iou_single_attr_sum = 0.0
                     for x in iou_all[i_iou]:
