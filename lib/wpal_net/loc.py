@@ -412,6 +412,7 @@ def test_localization(net,
 
         for a in attr_list:
             # check directory for saving visualization images
+            pos_loc_img = 0
             vis_img_dir = os.path.join(output_dir, 'display', db.attr_eng[a][0][0], name)
             if not os.path.exists(vis_img_dir):
                 os.makedirs(vis_img_dir)
@@ -479,13 +480,13 @@ def test_localization(net,
         if cnt >= max_count:
 
             # Count mean IoU:
-            for i in range(0, len(iou_all)):
-                if len(iou_all[i]) != 0:
+            for i_iou in range(0, len(iou_all)):
+                if len(iou_all[i_iou]) != 0:
                     iou_single_attr_sum = 0.0
-                    for x in iou_all[i]:
+                    for x in iou_all[i_iou]:
                         iou_single_attr_sum += x
-                    iou_single_attr_sum /= len(iou_all[i])
-                    print "The mean IoU of %d-th attribute in test images is %f" % (i, iou_single_attr_sum)
+                    iou_single_attr_sum /= len(iou_all[i_iou])
+                    print "The mean IoU of %d-th attribute in test images is %f" % (i_iou, iou_single_attr_sum)
 
             break
 
