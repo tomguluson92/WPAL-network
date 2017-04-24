@@ -78,7 +78,7 @@ def cluster_heat(img, k, stepsX, max_round=1000):
     return centroids
 
 
-def locate(xa1, ya1, pw, ph,img_ind, scaled_img,
+def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
            pos_ave, neg_ave, dweight,
            attr_id,
            db,
@@ -405,8 +405,14 @@ def test_localization(net,
                 os.makedirs(vis_img_dir)
             low = (4 * int(db.attr_position_ind[attr_id]))
             up = low + 4
+            bbxx, bbxy, bbxw, bbxh = db.position[int(img_ind)][0:4]
             xa1, ya1, pw, ph = db.position[int(img_ind)][low:up]
-
+            xa1 = xa1-bbxx
+            xa1 = int(xa1*img_scale)
+            ya1 = ya1-bbxy
+            ya1 = int(ya1*img_scale)
+            pw = int(pw*img_scale)
+            ph = int(ph*img_scale)
             act_map, centroids = locate(xa1, ya1, pw, ph, img_ind, img,
                                         pos_ave, neg_ave, dweight,
                                         a,
