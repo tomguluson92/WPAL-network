@@ -60,6 +60,16 @@ class PETA:
         self.num_attr = self.name.shape[0]
         self.test_ind = None
         self.train_ind = None
+        self.train_classified_ind = []
+        self.train_classified_pre = []
+        self.train_classified_b = []
+        self.path_tmp = None
+        self.img_tmp = None
+        self.height = None
+        self.width = None
+        self.size_ratio_tmp = None
+        for i in xrange(11):
+            self.train_classified_pre.append([])
         self.label_weight = None
         self.set_partition_set_id(par_set_id)
         self.attr_group = [range(0, 4)]
