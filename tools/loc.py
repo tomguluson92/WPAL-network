@@ -168,7 +168,7 @@ if __name__ == '__main__':
             for i in range(0, 51):
                 miou_all.append([])
             for attr_id in args.attr_id_list.split(','):
-                miou_all[attr_id].append(
+                miou_all[int(attr_id)].append(
                     test_localization(net, db, args.output_dir, pack['pos_ave'], pack['neg_ave'], pack['binding'],
                                       attr_id=int(attr_id),
                                       display=args.display,
