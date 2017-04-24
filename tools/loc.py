@@ -164,8 +164,15 @@ if __name__ == '__main__':
                               display=args.display,
                               max_count=args.max_count)
         else:
+            miou_all = []
+            for i in range(0, 51):
+                miou_all.append([])
             for attr_id in args.attr_id_list.split(','):
-                test_localization(net, db, args.output_dir, pack['pos_ave'], pack['neg_ave'], pack['binding'],
-                                  attr_id=int(attr_id),
-                                  display=args.display,
-                                  max_count=args.max_count)
+                miou_all[attr_id].append(
+                    test_localization(net, db, args.output_dir, pack['pos_ave'], pack['neg_ave'], pack['binding'],
+                                      attr_id=int(attr_id),
+                                      display=args.display,
+                                      max_count=args.max_count))
+            for iou_i in range(0, len(miou_all)):
+                if len(miou_all[iou_i]) != 0:
+                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, miou_all[iou_i][0])
