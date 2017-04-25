@@ -4494,7 +4494,7 @@ layer {
         type: "constant"
         value: 0.1
     }
-    num_output: 92
+    num_output: 51
   }
 }
 ########################## Loss Layer ##########################
