@@ -45,7 +45,7 @@ def _get_image_blob(img, neglect):
             raise ResizedImageTooLargeException
         img_scale = math.sqrt(float(cfg.TEST.MAX_AREA) / float(img_size_min * img_size_max))
 
-    if img_scale * img_size_min < 64:
+    if img_scale * img_size_min < 96:
         raise ResizedSideTooShortException
 
     img = cv2.resize(img_orig, None, None, fx=img_scale, fy=img_scale,

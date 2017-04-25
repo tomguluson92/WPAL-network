@@ -175,4 +175,4 @@ if __name__ == '__main__':
                                       max_count=args.max_count))
             for iou_i in range(0, len(miou_all)):
                 if len(miou_all[iou_i]) != 0:
-                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, miou_all[iou_i][0])
+                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
