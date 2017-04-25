@@ -68,6 +68,7 @@ def _flip_labels(labels, flip, flip_attr_pairs):
 
 def _get_weight_blob(labels, weight):
     """Builds an input blob from the labels"""
+    labels = labels[0:cfg.NUM_ATTR]
     blob = np.zeros((labels.__len__(), 1, 1, labels[0].__len__()),
                     dtype=np.float32)
     for i in xrange(labels.__len__()):
@@ -78,6 +79,7 @@ def _get_weight_blob(labels, weight):
 
 def _get_attr_blob(labels, flip, flip_attr_pairs):
     """Builds an input blob from the labels"""
+    labels = labels[0:cfg.NUM_ATTR]
     blob = np.zeros((labels.__len__(), 1, 1, labels[0].__len__()),
                     dtype=np.float32)
     for i in xrange(labels.__len__()):

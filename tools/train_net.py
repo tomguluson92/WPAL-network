@@ -109,7 +109,7 @@ if __name__ == '__main__':
         from utils.peta_db import PETA
         db = PETA(os.path.join('data', 'dataset',  args.db), args.par_set_id)
 
-    cfg.NUM_ATTR = db.num_attr
+    #cfg.NUM_ATTR = db.num_attr
 
     print 'Output will be saved to `{:s}`'.format(args.output_dir)
     try:
