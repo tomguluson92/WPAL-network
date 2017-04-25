@@ -173,7 +173,7 @@ if __name__ == '__main__':
                                   display=args.display,
                                   max_count=args.max_count)
                 if iou_sa != -1:
-                    miou_all[int(attr_id)].append()
+                    miou_all[int(attr_id)].append(iou_sa)
             for iou_i in range(0, len(miou_all)):
                 if len(miou_all[iou_i]) != 0:
                     print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
