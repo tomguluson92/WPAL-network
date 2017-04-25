@@ -425,6 +425,19 @@ def test_localization(net,
             ya1 = int(ya1 * img_scale)
             pw = int(pw * img_scale)
             ph = int(ph * img_scale)
+            if a == 9:
+                ph /= 2
+            if a == 12:
+                ph = ph * 3 / 4
+            if a == 13:
+                ya1 += ph / 3
+                ph /= 3
+            if a == 14:
+                ya1 += ph / 2
+                ph /= 2
+            if 30 <= a <= 34:
+                ya1 += 3*ph/4
+                ph /= 4
             act_map, centroids, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
                                                                  pos_ave, neg_ave, dweight,
                                                                  a,
@@ -477,7 +490,6 @@ def test_localization(net,
         cnt += 1
         print 'Localized {} targets!'.format(cnt)
         if cnt >= max_count:
-
             break
     if attr_id != -1:
         # Count mean IoU:
@@ -487,7 +499,6 @@ def test_localization(net,
                 iou_single_attr_sum += x
             iou_single_attr_sum /= len(iou_all[attr_id])
             return iou_single_attr_sum
-
 
 
 def locate_in_video(net,
