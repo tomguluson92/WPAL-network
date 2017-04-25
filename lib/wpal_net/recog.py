@@ -33,7 +33,7 @@ def _get_image_blob(img, neglect):
     processed_images = []
 
     #target_size = cfg.TEST.SCALE
-    img_scale = float(114688) / float(img_size_max*img_size_min)
+    img_scale = math.sqrt(float(114688) / float(img_size_max*img_size_min))
 
 #    # Prevent the shorter sides from being less than MIN_SIZE
 #    if np.round(img_scale * img_size_min < cfg.MIN_SIZE):
