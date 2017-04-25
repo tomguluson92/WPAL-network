@@ -40,7 +40,7 @@ class RAP:
         self.labels = rap[0][0][1]
         self.attr_ch_all = rap[0][0][2]
         self.attr_eng_all = rap[0][0][3]
-        self.num_attr_all = self.attr_eng.shape[0]
+        self.num_attr_all = self.attr_eng_all.shape[0]
         self.position = rap[0][0][4]
         self._img_names = rap[0][0][5]
         self.attr_exp = rap[0][0][6]
