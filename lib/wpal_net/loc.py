@@ -499,6 +499,8 @@ def test_localization(net,
                 iou_single_attr_sum += x
             iou_single_attr_sum /= len(iou_all[attr_id])
             return iou_single_attr_sum
+        else:
+            return -1
 
 
 def locate_in_video(net,
