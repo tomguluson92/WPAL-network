@@ -30,6 +30,7 @@ import scipy.io as sio
 import evaluate
 from wpal_net.config import cfg
 
+
 class RAP:
     def __init__(self, db_path, par_set_id):
         self._db_path = db_path
@@ -37,18 +38,19 @@ class RAP:
         rap = sio.loadmat(osp.join(self._db_path, 'RAP_annotation', 'RAP_annotation.mat'))['RAP_annotation']
 
         self._partition = rap[0][0][0]
-        self.labels_all = rap[0][0][1]
-        self.attr_ch_all = rap[0][0][2]
-        self.attr_eng_all = rap[0][0][3]
-        self.num_attr_all = self.attr_eng_all.shape[0]
+        self.labels = rap[0][0][1]
+        self.attr_ch = rap[0][0][2]
+        self.attr_eng = rap[0][0][3]
+        self.num_attr = self.attr_eng.shape[0]
         self.position = rap[0][0][4]
         self._img_names = rap[0][0][5]
         self.attr_exp = rap[0][0][6]
 
-        self.attr_ch = self.attr_ch_all[0:51]
-        self.attr_eng = self.attr_eng_all[0:51]
+        self.attr_ch = self.attr_ch[0:51]
+        self.attr_eng = self.attr_eng[0:51]
         self.num_attr = 51
-        self.labels = self.labels_all[0:51]
+        for labels_i in range(0, len(self.labels)):
+            self.labels[labels_i] = self.labels[labels_i][0:51]
 
         self.attr_group = [range(1, 4), range(4, 7), range(7, 9), range(9, 11), range(30, 36), ]
 
@@ -103,10 +105,10 @@ class RAP:
             self.img_tmp = cv2.imread(self.path_tmp)
             self.height, self.width = self.img_tmp.shape[:2]
             self.size_ratio_tmp = round(float(self.height) / float(self.width))
-            if i%1000 == 0:
+            if i % 1000 == 0:
                 print i
             if self.size_ratio_tmp > 10:
-               self.size_ratio_tmp = 10
+                self.size_ratio_tmp = 10
             self.train_classified_pre[int(self.size_ratio_tmp)].append(i)
         print "The size of database is %d. " % (len(self.train_ind))
         for i in xrange(11):
