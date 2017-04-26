@@ -46,11 +46,11 @@ class RAP:
         self._img_names = rap[0][0][5]
         self.attr_exp = rap[0][0][6]
 
-        self.attr_ch = self.attr_ch[0:51]
-        self.attr_eng = self.attr_eng[0:51]
-        self.num_attr = 51
-        for labels_i in range(0, len(self.labels)):
-            self.labels[labels_i] = self.labels[labels_i][0:51]
+        #self.attr_ch = self.attr_ch[0:51]
+        #self.attr_eng = self.attr_eng[0:51]
+        #self.num_attr = 51
+        #for labels_i in range(0, len(self.labels)):
+        #    self.labels[labels_i] = self.labels[labels_i][0:51]
 
         self.attr_group = [range(1, 4), range(4, 7), range(7, 9), range(9, 11), range(30, 36), ]
 
