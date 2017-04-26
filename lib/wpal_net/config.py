@@ -99,7 +99,7 @@ __C.TEST.SCALE = 600
 __C.TEST.MAX_AREA = 114688
 
 # To limit testing attributes on RAP.
-__C.TEST.MAX_NUM_ATTR = 92
+__C.TEST.MAX_NUM_ATTR = 51
 
 #
 # Attribute localizing options

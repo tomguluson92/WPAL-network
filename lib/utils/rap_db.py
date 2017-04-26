@@ -37,18 +37,18 @@ class RAP:
         rap = sio.loadmat(osp.join(self._db_path, 'RAP_annotation', 'RAP_annotation.mat'))['RAP_annotation']
 
         self._partition = rap[0][0][0]
-        self.labels = rap[0][0][1]
-        self.attr_ch = rap[0][0][2]
-        self.attr_eng = rap[0][0][3]
-        self.num_attr = self.attr_eng.shape[0]
+        self.labels_all = rap[0][0][1]
+        self.attr_ch_all = rap[0][0][2]
+        self.attr_eng_all = rap[0][0][3]
+        self.num_attr_all = self.attr_eng_all.shape[0]
         self.position = rap[0][0][4]
         self._img_names = rap[0][0][5]
         self.attr_exp = rap[0][0][6]
 
-        #self.attr_ch = self.attr_ch_all[0:51]
-        #self.attr_eng = self.attr_eng_all[0:51]
-        #self.num_attr = 51
-
+        self.attr_ch = self.attr_ch_all[0:51]
+        self.attr_eng = self.attr_eng_all[0:51]
+        self.num_attr = 51
+        self.labels = self.labels_all[0:51]
 
         self.attr_group = [range(1, 4), range(4, 7), range(7, 9), range(9, 11), range(30, 36), ]
 
