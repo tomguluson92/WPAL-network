@@ -267,7 +267,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         iou = 0
         overlaprate = 0.0
         feature_heat_map_gray = cv2.cvtColor(feature_heat_map, cv2.COLOR_BGR2GRAY)
-        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 20, 255, cv2.THRESH_BINARY)
+        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 10, 255, cv2.THRESH_BINARY)
         binary = feature_heat_map_binary
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         suitable_contours = []
@@ -277,10 +277,10 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         for j in range(0, len(contours)):
             featurex, featurey, featurew, featureh = cv2.boundingRect(contours[j])
 
-            for mm_i in range(0, len(max_x)):
-            #for c in centroids[:expected_num_centroids]:
-                if 0 < (max_x[mm_i] - featurex) < featurew and 0 < (max_y[mm_i] - featurey) < featureh:
-             #   if 0 < (c[0] - featurex) < featurew and 0 < (c[1] - featurey) < featureh:
+            #for mm_i in range(0, len(max_x)):
+            for c in centroids[:expected_num_centroids]:
+            #   if 0 < (max_x[mm_i] - featurex) < featurew and 0 < (max_y[mm_i] - featurey) < featureh:
+                if 0 < (c[0] - featurex) < featurew and 0 < (c[1] - featurey) < featureh:
                     suitable_contours.append(contours[j])
                     cv2.rectangle(feature_heat_map_bbox,
                                   (featurex, featurey), (featurex + featurew, featurey + featureh),
