@@ -276,7 +276,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         for j in range(0, len(contours)):
             featurex, featurey, featurew, featureh = cv2.boundingRect(contours[j])
 
-            for mm_i in range(0, len(max)):
+            for mm_i in range(0, len(max_x)):
                 if 0 < (max_x[mm_i] - featurex) < featurew and 0 < (max_y[mm_i] - featurey) < featureh:
                     suitable_contours.append(contours[j])
                     cv2.rectangle(feature_heat_map_bbox,
