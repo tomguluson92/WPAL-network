@@ -277,10 +277,10 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         for j in range(0, len(contours)):
             featurex, featurey, featurew, featureh = cv2.boundingRect(contours[j])
 
-            #for mm_i in range(0, len(max_x)):
-            for c in centroids[:expected_num_centroids]:
-                #if 0 < (max_x[mm_i] - featurex) < featurew and 0 < (max_y[mm_i] - featurey) < featureh:
-                if 0 < (c[0] - featurex) < featurew and 0 < (c[1] - featurey) < featureh:
+            for mm_i in range(0, len(max_x)):
+            #for c in centroids[:expected_num_centroids]:
+                if 0 < (max_x[mm_i] - featurex) < featurew and 0 < (max_y[mm_i] - featurey) < featureh:
+             #   if 0 < (c[0] - featurex) < featurew and 0 < (c[1] - featurey) < featureh:
                     suitable_contours.append(contours[j])
                     cv2.rectangle(feature_heat_map_bbox,
                                   (featurex, featurey), (featurex + featurew, featurey + featureh),
@@ -302,7 +302,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
 
                     overlap = 0.0
                     findarea = 0.0
-                    originarea = pw*ph
+                    originarea = pw * ph
                     for z in range(0, len(suitable_contours)):
                         xb1, yb1, cw, ch = cv2.boundingRect(suitable_contours[z])
                         xb2 = xb1 + cw
@@ -323,7 +323,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                             print "Overlap in process = %f" % overlap
 
                     overlaprate = float(overlap) / float(findarea)
-                    iou = float(overlap) / float(originarea+findarea-overlap)
+                    iou = float(overlap) / float(originarea + findarea - overlap)
                     print "The area of findarea is %d " % findarea
                     print "The area of overlap is %d " % overlap
                     print "overlaprate of attribute %d in img %d is %f" % (attr_id, img_ind, overlaprate)
@@ -449,16 +449,18 @@ def test_localization(net,
             if a == 14:
                 ya1 += ph / 2
                 ph /= 2
+            if 15 <= a <= 23:
+                ph = ph * 4 / 5
             if 30 <= a <= 34:
                 ya1 += 3 * ph / 4
                 ph /= 4
             act_map, centroids, overlaprate_single, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
-                                                                 pos_ave, neg_ave, dweight,
-                                                                 a,
-                                                                 db,
-                                                                 attr, heat_maps, score,
-                                                                 False and display and attr_id != -1,
-                                                                 vis_img_dir)
+                                                                                     pos_ave, neg_ave, dweight,
+                                                                                     a,
+                                                                                     db,
+                                                                                     attr, heat_maps, score,
+                                                                                     False and display and attr_id != -1,
+                                                                                     vis_img_dir)
             if pos_loc_img == 1:
                 iou_all[a].append(iou_single)
                 overlaprate_all[a].append(overlaprate_single)
@@ -520,7 +522,7 @@ def test_localization(net,
             overlaprate_all_attr_sum /= len(overlaprate_all[attr_id])
             return overlaprate_all_attr_sum, iou_single_attr_sum
         else:
-            return -1,-1
+            return -1, -1
 
 
 def locate_in_video(net,
