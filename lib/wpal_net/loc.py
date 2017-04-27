@@ -265,6 +265,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
 
         pos_loc_img = 0
         iou = 0
+        overlaprate = 0.0
         feature_heat_map_gray = cv2.cvtColor(feature_heat_map, cv2.COLOR_BGR2GRAY)
         retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 35, 255, cv2.THRESH_BINARY)
         binary = feature_heat_map_binary
