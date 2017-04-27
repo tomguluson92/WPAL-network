@@ -271,7 +271,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         binary = feature_heat_map_binary
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         suitable_contours = []
-        wheremax = np.where(superposition == np.max(superposition))
+        wheremax = np.where(superposition == np.min(superposition))
         max_x = wheremax[0]
         max_y = wheremax[1]
         for j in range(0, len(contours)):
