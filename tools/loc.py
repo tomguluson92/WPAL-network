@@ -183,4 +183,4 @@ if __name__ == '__main__':
                     print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
             for mop_i in range(0, len(mop_all)):
                 if len(mop_all[mop_i]) != 0:
-                    print "The mean Iou of %d-th attribute in test images is %f" % (mop_i, float(miou_all[mop_i][0]))
+                    print "The mean OP of %d-th attribute in test images is %f" % (mop_i, float(mop_all[mop_i][0]))
