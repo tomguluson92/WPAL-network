@@ -270,10 +270,14 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         binary = feature_heat_map_binary
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         suitable_contours = []
+        wheremax = np.where(superposition == np.max(superposition))
+        max_x = wheremax[0]
+        max_y = wheremax[1]
         for j in range(0, len(contours)):
             featurex, featurey, featurew, featureh = cv2.boundingRect(contours[j])
-            for c in centroids[:expected_num_centroids]:
-                if 0 < (c[0] - featurex) < featurew and 0 < (c[1] - featurey) < featureh:
+
+            for mm_i in range(0, len(max)):
+                if 0 < (max_x[mm_i] - featurex) < featurew and 0 < (max_y[mm_i] - featurey) < featureh:
                     suitable_contours.append(contours[j])
                     cv2.rectangle(feature_heat_map_bbox,
                                   (featurex, featurey), (featurex + featurew, featurey + featureh),
@@ -291,7 +295,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                                   (0, 255, 0))
                     overlap = 0.0
                     findarea = 0.0
-                    originarea = 0.0
+                    originarea = pw*ph
                     for z in range(0, len(suitable_contours)):
                         xb1, yb1, cw, ch = cv2.boundingRect(suitable_contours[z])
                         xb2 = xb1 + cw
@@ -311,9 +315,11 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                             pos_loc_img = 1
                             print "Overlap in process = %f" % overlap
 
-                    iou = float(overlap) / float(findarea)
+                    overlaprate = float(overlap) / float(findarea)
+                    iou = float(overlap) / float(originarea+findarea-overlap)
                     print "The area of findarea is %d " % findarea
                     print "The area of overlap is %d " % overlap
+                    print "overlaprate of attribute %d in img %d is %f" % (attr_id, img_ind, overlaprate)
                     print "iou of attribute %d in img %d is %f" % (attr_id, img_ind, iou)
                 else:
                     print "The localization of this attribute failed."
@@ -336,7 +342,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     cv2.destroyWindow("img")
     cv2.destroyWindow("feature bounding boxes")
 
-    return superposition, np.array(centroids[:expected_num_centroids]), iou, pos_loc_img
+    return superposition, np.array(centroids[:expected_num_centroids]), overlaprate, iou, pos_loc_img
 
 
 def test_localization(net,
@@ -348,9 +354,10 @@ def test_localization(net,
                       max_count=-1):
     """Test localization of a WPAL Network."""
     iou_all = []
+    overlaprate_all = []
     for i in range(0, 51):
         iou_all.append([])
-
+        overlaprate_all.append([])
     cfg.TEST.MAX_AREA = cfg.TEST.MAX_AREA * 7 / 8
 
     num_images = len(db.test_ind)
@@ -436,9 +443,9 @@ def test_localization(net,
                 ya1 += ph / 2
                 ph /= 2
             if 30 <= a <= 34:
-                ya1 += 3*ph/4
+                ya1 += 3 * ph / 4
                 ph /= 4
-            act_map, centroids, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
+            act_map, centroids, overlaprate_single, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
                                                                  pos_ave, neg_ave, dweight,
                                                                  a,
                                                                  db,
@@ -447,6 +454,8 @@ def test_localization(net,
                                                                  vis_img_dir)
             if pos_loc_img == 1:
                 iou_all[a].append(iou_single)
+                overlaprate_all[a].append(overlaprate_single)
+
             if attr_id == -1:
                 all_centroids += centroids
                 total_superposition += act_map * 256 / len(attr_list)
@@ -494,13 +503,17 @@ def test_localization(net,
     if attr_id != -1:
         # Count mean IoU:
         if len(iou_all[attr_id]) != 0:
+            overlaprate_all_attr_sum = 0.0
             iou_single_attr_sum = 0.0
             for x in iou_all[attr_id]:
                 iou_single_attr_sum += x
+            for y in overlaprate_all[attr_id]:
+                overlaprate_all_attr_sum += y
             iou_single_attr_sum /= len(iou_all[attr_id])
-            return iou_single_attr_sum
+            overlaprate_all_attr_sum /= len(overlaprate_all[attr_id])
+            return overlaprate_all_attr_sum, iou_single_attr_sum
         else:
-            return -1
+            return -1,-1
 
 
 def locate_in_video(net,
