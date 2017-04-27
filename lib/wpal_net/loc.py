@@ -288,6 +288,9 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
             cv2.rectangle(feature_heat_map_bbox,
                           (xa1, ya1), (xa1 + pw, ya1 + ph),
                           (0, 255, 0))
+            cv2.rectangle(canvas,
+                          (xa1, ya1), (xa1 + pw, ya1 + ph),
+                          (0, 255, 0))
             if 8 < attr_id < 35 or attr_id == 43:
                 if len(suitable_contours) != 0:
 
