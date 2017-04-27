@@ -267,7 +267,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         iou = 0
         overlaprate = 0.0
         feature_heat_map_gray = cv2.cvtColor(feature_heat_map, cv2.COLOR_BGR2GRAY)
-        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 35, 255, cv2.THRESH_BINARY)
+        retval, feature_heat_map_binary = cv2.threshold(feature_heat_map_gray, 20, 255, cv2.THRESH_BINARY)
         binary = feature_heat_map_binary
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         suitable_contours = []
@@ -285,15 +285,16 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                                   (0, 0, 255))
                     break
         if attr_id != -1:
+            cv2.rectangle(feature_heat_map_bbox,
+                          (xa1, ya1), (xa1 + pw, ya1 + ph),
+                          (0, 255, 0))
             if 8 < attr_id < 35 or attr_id == 43:
                 if len(suitable_contours) != 0:
 
                     xa2 = xa1 + pw
                     ya2 = ya1 + ph
                     print "xa1 = %d, ya1 = %d, pw = %d, ph = %d" % (xa1, ya1, pw, ph)
-                    cv2.rectangle(feature_heat_map_bbox,
-                                  (xa1, ya1), (xa1 + pw, ya1 + ph),
-                                  (0, 255, 0))
+
                     overlap = 0.0
                     findarea = 0.0
                     originarea = pw*ph
