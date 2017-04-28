@@ -174,6 +174,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     feature_heat_map = np.array(scaled_img)
     feature_heat_map_bbox = np.array(scaled_img)
 
+    print "# calc the actual contribution weights"
     # calc the actual contribution weights
     def w_func(x):
         return 0 \
@@ -211,11 +212,14 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
             #    cv2.imwrite(os.path.join(vis_img_dir, 'heat{}.jpg'.format(j)),
             #                heat_vis)
 
+    print "Center of the feature."
     # Center of the feature.
     center_y = sum([w_func(j) / w_sum * target[j][0] / bin2heat[j].shape[0]
                     for j in xrange(len(score))])
     center_x = sum([w_func(j) / w_sum * target[j][1] / bin2heat[j].shape[1]
                     for j in xrange(len(score))])
+
+    print " # Superposition of the heat maps."
     # Superposition of the heat maps.
     superposition = sum([cv2.resize(w_func(j) / w_sum * bin2heat[j].astype(float)
                                     * gaussian_filter(bin2heat[j].shape,
