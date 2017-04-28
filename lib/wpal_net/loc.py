@@ -231,7 +231,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     #                                (img_width, img_height))
     #                     for j in xrange(len(score))])
     superposition = sum([cv2.resize(w_func(j) / w_sum * bin2heat[j].astype(float)
-                                    * zero_mask(bin2heat[j].shape, get_effect_area(j)),
+                                    ,
                                     (img_width, img_height))
                          for j in xrange(len(score))])
 
