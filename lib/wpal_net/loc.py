@@ -340,11 +340,11 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
             cv2.imshow("feature bounding boxes", feature_heat_map_bbox)
             cv2.waitKey(0)
     if vis_img_dir is not None:
-        print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
-        cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
-        if len(suitable_contours) != 0:
-            print 'Saving to:', os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg')
-            cv2.imwrite(os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg'), feature_heat_map_bbox)
+      #  print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
+      #  cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
+      #  if len(suitable_contours) != 0:
+      #      print 'Saving to:', os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg')
+      #      cv2.imwrite(os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg'), feature_heat_map_bbox)
     cv2.destroyWindow("heat")
     cv2.destroyWindow("img")
     cv2.destroyWindow("feature bounding boxes")
