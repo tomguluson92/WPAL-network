@@ -235,7 +235,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                              expected_num_centroids + 2,
                              scaled_img.shape[1],
                              max_round=10)
-
+    print "Bounding Box"
     if display or vis_img_dir is not None:
         for c in centroids[:expected_num_centroids]:
             cv2.line(canvas,
