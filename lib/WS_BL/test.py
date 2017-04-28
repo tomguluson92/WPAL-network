@@ -65,12 +65,12 @@ def test_net(net, db, output_dir):
         cPickle.dump(all_attrs, f, cPickle.HIGHEST_PROTOCOL)
 
     mA, accPerAttr, challenging = db.evaluate_mA(all_attrs, db.test_ind)
-    print 'mA={:f}'.format(mA)
+    print 'mA={}'.format(mA)
     print 'Challenging attributes:', challenging
 
     acc, prec, rec, f1 = db.evaluate_example_based(all_attrs, db.test_ind)
 
-    print 'Acc={:f} Prec={:f} Rec={:f} F1={:f}'.format(acc, prec, rec, f1)
+    print 'Acc={} Prec={} Rec={} F1={}'.format(acc, prec, rec, f1)
 
     acc_file = os.path.join(output_dir, 'acc.txt')
     with open(acc_file, 'w') as f:
