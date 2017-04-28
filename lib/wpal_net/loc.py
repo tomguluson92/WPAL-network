@@ -87,6 +87,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
            score,
            display=True,
            vis_img_dir=None):
+    print "Start locating!"
     dweight = np.log(dweight)
     weight_threshold = [sorted(x, reverse=1)[512] for x in dweight]
 
