@@ -201,14 +201,14 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                      (int(img_width * x), int(img_height * y + cross_len)),
                      (0, 255, 255),
                      thickness=4)
-            if display:
-                cv2.imshow("heat", heat_vis)
-                cv2.waitKey(100)
+            #if display:
+            #    cv2.imshow("heat", heat_vis)
+            #    cv2.waitKey(100)
 
-            if vis_img_dir is not None:
-                print 'Saving to:', os.path.join(vis_img_dir, 'heat{}.jpg'.format(j))
-                cv2.imwrite(os.path.join(vis_img_dir, 'heat{}.jpg'.format(j)),
-                            heat_vis)
+            #if vis_img_dir is not None:
+            #    print 'Saving to:', os.path.join(vis_img_dir, 'heat{}.jpg'.format(j))
+            #    cv2.imwrite(os.path.join(vis_img_dir, 'heat{}.jpg'.format(j)),
+            #                heat_vis)
 
     # Center of the feature.
     center_y = sum([w_func(j) / w_sum * target[j][0] / bin2heat[j].shape[0]
@@ -277,10 +277,10 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         for j in range(0, len(contours)):
             featurex, featurey, featurew, featureh = cv2.boundingRect(contours[j])
 
-            #for mm_i in range(0, len(max_x)):
+            for mm_i in range(0, len(max_x)):
             for c in centroids[:expected_num_centroids]:
-            #    if 0 < (max_x[mm_i] - featurex) < featurew and 0 < (max_y[mm_i] - featurey) < featureh:
-                if 0 < (c[0] - featurex) < featurew and 0 < (c[1] - featurey) < featureh:
+                if 0 < (max_x[mm_i] - featurex) < featurew and 0 < (max_y[mm_i] - featurey) < featureh:
+             #   if 0 < (c[0] - featurex) < featurew and 0 < (c[1] - featurey) < featureh:
                     suitable_contours.append(contours[j])
                     cv2.rectangle(feature_heat_map_bbox,
                                   (featurex, featurey), (featurex + featurew, featurey + featureh),
@@ -339,13 +339,13 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         if len(suitable_contours) != 0:
             cv2.imshow("feature bounding boxes", feature_heat_map_bbox)
             cv2.waitKey(0)
-    if vis_img_dir is not None:
-      #  print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
-      #  cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
-      #  if len(suitable_contours) != 0:
-      #      print 'Saving to:', os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg')
-      #      cv2.imwrite(os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg'), feature_heat_map_bbox)
-    cv2.destroyWindow("heat")
+    #if vis_img_dir is not None:
+    #    print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
+    #    cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
+    #    if len(suitable_contours) != 0:
+    #        print 'Saving to:', os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg')
+    #        cv2.imwrite(os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg'), feature_heat_map_bbox)
+    #cv2.destroyWindow("heat")
     cv2.destroyWindow("img")
     cv2.destroyWindow("feature bounding boxes")
 
