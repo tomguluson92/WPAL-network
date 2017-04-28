@@ -230,6 +230,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     val_range = superposition.max() - superposition.min()
     superposition = (superposition - thresh) / val_range
 
+    print "count Cluster_heat"
     expected_num_centroids = db.expected_loc_centroids[attr_id]
     centroids = cluster_heat(superposition,
                              expected_num_centroids + 2,
