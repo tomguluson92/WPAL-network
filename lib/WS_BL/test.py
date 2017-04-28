@@ -33,6 +33,7 @@ from utils.timer import Timer
 from recog import recognize_attr
 from WS_BL.config import cfg
 
+
 def test_net(net, db, output_dir):
     """Test a Weakly-supervised Pedestrian Attribute Localization Network on an image database."""
 
@@ -41,7 +42,7 @@ def test_net(net, db, output_dir):
     all_attrs = [[] for _ in xrange(num_images)]
 
     # timers
-    _t = {'recognize_attr' : Timer()}
+    _t = {'recognize_attr': Timer()}
 
     threshold = np.ones(db.num_attr) * 0.5;
 
@@ -50,14 +51,14 @@ def test_net(net, db, output_dir):
         img_path = db.get_img_path(i)
         img = cv2.imread(img_path)
         _t['recognize_attr'].tic()
-        attr, _, score, _ = recognize_attr(net, img, db.attr_group, threshold)
+        attr, _, _ = recognize_attr(net, img, db.attr_group, threshold)
         _t['recognize_attr'].toc()
         all_attrs[cnt] = attr
         cnt += 1
 
         if cnt % 100 == 0:
             print 'recognize_attr: {:d}/{:d} {:.3f}s' \
-                  .format(cnt, num_images, _t['recognize_attr'].average_time)
+                .format(cnt, num_images, _t['recognize_attr'].average_time)
 
     attr_file = os.path.join(output_dir, 'attributes.pkl')
     with open(attr_file, 'wb') as f:
@@ -77,4 +78,3 @@ def test_net(net, db, output_dir):
             f.write('{}: {}\n'.format(db.attr_eng[i][0][0], accPerAttr[i]))
         f.write('mA: {}\n'.format(mA))
         f.write('Acc: {} \t Prec: {} \t Rec: {} \t F1: {}\n'.format(acc, prec, rec, f1))
-
