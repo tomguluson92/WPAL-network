@@ -113,10 +113,10 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     superposition = (superposition - thresh) / val_range
 
     expected_num_centroids = db.expected_loc_centroids[attr_id]
-    centroids = cluster_heat(superposition,
-                             expected_num_centroids + 2,
-                             scaled_img.shape[1],
-                             max_round=10)
+#    centroids = cluster_heat(superposition,
+#                             expected_num_centroids + 2,
+#                             scaled_img.shape[1],
+#                             max_round=10)
 
     if display or vis_img_dir is not None:
         #for c in centroids[:expected_num_centroids]:
