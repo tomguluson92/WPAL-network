@@ -108,9 +108,9 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     #                for j in xrange(len(score))])
     # Superposition of the heat maps.
     superposition = heat_maps[attr_id]
-    thresh = min(np.median(superposition), np.mean(superposition))
-    val_range = superposition.max() - superposition.min()
-    superposition = (superposition - thresh) / val_range
+#    thresh = min(np.median(superposition), np.mean(superposition))
+#    val_range = superposition.max() - superposition.min()
+#    superposition = (superposition - thresh) / val_range
 
 #    expected_num_centroids = db.expected_loc_centroids[attr_id]
 #    centroids = cluster_heat(superposition,
