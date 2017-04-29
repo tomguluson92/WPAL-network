@@ -95,30 +95,6 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     img_width = scaled_img.shape[1]
     img_area = img_height * img_width
     cross_len = math.sqrt(img_area) * 0.05
-    # calc the actual contribution weights
-    if display or vis_img_dir is not None:
-        for j in [_[0] for _ in sorted(enumerate([w_func(k) for k in xrange(len(score))]),
-                                       key=lambda x: x[1],
-                                       reverse=1)][0:8]:
-            val_scale = 255.0 / max(max(__) for __ in bin2heat[j])
-            heat_vis = np.zeros_like(scaled_img)
-            heat_vis[..., 2] = cv2.resize((bin2heat[j] * val_scale).astype('uint8'),
-                                          (scaled_img.shape[1], scaled_img.shape[0]))
-            y = 1.0 * target[j][0] / bin2heat[j].shape[0]
-            x = 1.0 * target[j][1] / bin2heat[j].shape[1]
-            cv2.line(heat_vis,
-                     (int(img_width * x - cross_len), int(img_height * y)),
-                     (int(img_width * x + cross_len), int(img_height * y)),
-                     (0, 255, 255),
-                     thickness=4)
-            cv2.line(heat_vis,
-                     (int(img_width * x), int(img_height * y - cross_len)),
-                     (int(img_width * x), int(img_height * y + cross_len)),
-                     (0, 255, 255),
-                     thickness=4)
-            if display:
-                cv2.imshow("heat", heat_vis)
-                cv2.waitKey(100)
 
             #if vis_img_dir is not None:
             #    print 'Saving to:', os.path.join(vis_img_dir, 'heat{}.jpg'.format(j))
