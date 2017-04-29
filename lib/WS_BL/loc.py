@@ -219,7 +219,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     cv2.destroyWindow("img")
     cv2.destroyWindow("feature bounding boxes")
 
-    return superposition, np.array(centroids[:expected_num_centroids]), iou, pos_loc_img
+    return superposition, iou, pos_loc_img
 
 
 def test_localization(net,
@@ -320,7 +320,7 @@ def test_localization(net,
             if 30 <= a <= 34:
                 ya1 += 3 * ph / 4
                 ph /= 4
-            act_map, centroids, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
+            act_map, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
                                                                  a,
                                                                  db,
                                                                  attr, heat_maps,
@@ -329,7 +329,6 @@ def test_localization(net,
             if pos_loc_img == 1:
                 iou_all[a].append(iou_single)
             if attr_id == -1:
-                all_centroids += centroids
                 total_superposition += act_map * 256 / len(attr_list)
             print 'Localized attribute {}: {}!'.format(a, db.attr_eng[a][0][0])
 
