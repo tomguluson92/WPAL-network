@@ -306,7 +306,6 @@ def test_localization(net,
             ya1 = ya1 - bbxy
             ya1 = int(ya1 * img_scale)
             pw = int(pw * img_scale)
-            ph = int(ph * img_scale)
             if a == 9:
                 ph /= 2
             if a == 12:
@@ -317,6 +316,8 @@ def test_localization(net,
             if a == 14:
                 ya1 += ph / 2
                 ph /= 2
+            if 15 <= a <= 23:
+                ph = ph * 4 / 5
             if 30 <= a <= 34:
                 ya1 += 3 * ph / 4
                 ph /= 4
