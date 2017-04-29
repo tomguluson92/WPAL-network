@@ -105,7 +105,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     #                for j in xrange(len(score))])
     # Superposition of the heat maps.
     superposition = heat_maps[attr_id]
-    cv2.resize(superposition, (img_width, img_height))
+    superposition = cv2.resize(superposition, (img_width, img_height))
     #    thresh = min(np.median(superposition), np.mean(superposition))
     #    val_range = superposition.max() - superposition.min()
     #    superposition = (superposition - thresh) / val_range
