@@ -32,8 +32,8 @@ import time
 import numpy as np
 
 import caffe
-from wpal_net.config import cfg, cfg_from_file, cfg_from_list
-from wpal_net.loc import test_localization, locate_in_video
+from WS_BL.config import cfg, cfg_from_file, cfg_from_list
+from WS_BL.loc import test_localization, locate_in_video
 
 
 def parse_args():
@@ -145,16 +145,15 @@ if __name__ == '__main__':
                         db,
                         args.video, args.tracking_res,
                         args.output_dir,
-                        pack['pos_ave'], pack['neg_ave'], pack['binding'],
                         args.attr_id_list)
     else:
         if args.attr_id_list == '-2':
             for a in xrange(db.num_attr):
-                test_localization(net, db, args.output_dir, pack['pos_ave'], pack['neg_ave'], pack['binding'],
+                test_localization(net, db, args.output_dir,
                                   attr_id=a,
                                   display=args.display,
                                   max_count=args.max_count)
-            test_localization(net, db, args.output_dir, pack['pos_ave'], pack['neg_ave'], pack['binding'],
+            test_localization(net, db, args.output_dir,
                               attr_id=-1,
                               display=args.display,
                               max_count=args.max_count)
@@ -163,7 +162,7 @@ if __name__ == '__main__':
             for i in range(0, 51):
                 miou_all.append([])
             for attr_id in args.attr_id_list.split(','):
-                iou_sa = test_localization(net, db, args.output_dir, pack['pos_ave'], pack['neg_ave'], pack['binding'],
+                iou_sa = test_localization(net, db, args.output_dir,
                                   attr_id=int(attr_id),
                                   display=args.display,
                                   max_count=args.max_count)

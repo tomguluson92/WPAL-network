@@ -79,15 +79,12 @@ def cluster_heat(img, k, stepsX, max_round=1000):
 
 
 def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
-           pos_ave, neg_ave, dweight,
            attr_id,
            db,
            attr,
            heat_maps,
            display=True,
            vis_img_dir=None):
-    dweight = np.log(dweight)
-    weight_threshold = [sorted(x, reverse=1)[512] for x in dweight]
 
 
 
@@ -99,13 +96,6 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     img_area = img_height * img_width
     cross_len = math.sqrt(img_area) * 0.05
     # calc the actual contribution weights
-    def w_func(x):
-        return 0 \
-            if dweight[attr_id][x] < weight_threshold[attr_id] \
-            else score[x] / (pos_ave[attr_id][x] if attr[attr_id] else neg_ave[attr_id][x]) * dweight[attr_id][x]
-
-    w_sum = sum([w_func(j) for j in xrange(len(score))])
-
     if display or vis_img_dir is not None:
         for j in [_[0] for _ in sorted(enumerate([w_func(k) for k in xrange(len(score))]),
                                        key=lambda x: x[1],
@@ -130,10 +120,10 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                 cv2.imshow("heat", heat_vis)
                 cv2.waitKey(100)
 
-            if vis_img_dir is not None:
-                print 'Saving to:', os.path.join(vis_img_dir, 'heat{}.jpg'.format(j))
-                cv2.imwrite(os.path.join(vis_img_dir, 'heat{}.jpg'.format(j)),
-                            heat_vis)
+            #if vis_img_dir is not None:
+            #    print 'Saving to:', os.path.join(vis_img_dir, 'heat{}.jpg'.format(j))
+            #    cv2.imwrite(os.path.join(vis_img_dir, 'heat{}.jpg'.format(j)),
+            #                heat_vis)
 
     # Center of the feature.
     #center_y = sum([w_func(j) / w_sum * target[j][0] / bin2heat[j].shape[0]
@@ -240,12 +230,12 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         if len(suitable_contours) != 0:
             cv2.imshow("feature bounding boxes", feature_heat_map_bbox)
             cv2.waitKey(0)
-    if vis_img_dir is not None:
-        print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
-        cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
-        if len(suitable_contours) != 0:
-            print 'Saving to:', os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg')
-            cv2.imwrite(os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg'), feature_heat_map_bbox)
+    #if vis_img_dir is not None:
+    #    print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
+    #    cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
+   #     if len(suitable_contours) != 0:
+    #        print 'Saving to:', os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg')
+    #        cv2.imwrite(os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg'), feature_heat_map_bbox)
     cv2.destroyWindow("heat")
     cv2.destroyWindow("img")
     cv2.destroyWindow("feature bounding boxes")
@@ -256,7 +246,6 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
 def test_localization(net,
                       db,
                       output_dir,
-                      pos_ave, neg_ave, dweight,
                       attr_id=-1,
                       display=True,
                       max_count=-1):
@@ -353,7 +342,6 @@ def test_localization(net,
                 ya1 += 3*ph/4
                 ph /= 4
             act_map, centroids, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
-                                                                 pos_ave, neg_ave, dweight,
                                                                  a,
                                                                  db,
                                                                  attr, heat_maps,
