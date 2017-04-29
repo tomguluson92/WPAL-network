@@ -85,9 +85,6 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
            heat_maps,
            display=True,
            vis_img_dir=None):
-
-
-
     canvas = np.array(scaled_img)
     feature_heat_map = np.array(scaled_img)
     feature_heat_map_bbox = np.array(scaled_img)
@@ -96,40 +93,41 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
     img_area = img_height * img_width
     cross_len = math.sqrt(img_area) * 0.05
 
-            #if vis_img_dir is not None:
-            #    print 'Saving to:', os.path.join(vis_img_dir, 'heat{}.jpg'.format(j))
-            #    cv2.imwrite(os.path.join(vis_img_dir, 'heat{}.jpg'.format(j)),
-            #                heat_vis)
+    # if vis_img_dir is not None:
+    #    print 'Saving to:', os.path.join(vis_img_dir, 'heat{}.jpg'.format(j))
+    #    cv2.imwrite(os.path.join(vis_img_dir, 'heat{}.jpg'.format(j)),
+    #                heat_vis)
 
     # Center of the feature.
-    #center_y = sum([w_func(j) / w_sum * target[j][0] / bin2heat[j].shape[0]
+    # center_y = sum([w_func(j) / w_sum * target[j][0] / bin2heat[j].shape[0]
     #                for j in xrange(len(score))])
-    #center_x = sum([w_func(j) / w_sum * target[j][1] / bin2heat[j].shape[1]
+    # center_x = sum([w_func(j) / w_sum * target[j][1] / bin2heat[j].shape[1]
     #                for j in xrange(len(score))])
     # Superposition of the heat maps.
     superposition = heat_maps[attr_id]
-#    thresh = min(np.median(superposition), np.mean(superposition))
-#    val_range = superposition.max() - superposition.min()
-#    superposition = (superposition - thresh) / val_range
+    cv2.resize(superposition, (img_width, img_height))
+    #    thresh = min(np.median(superposition), np.mean(superposition))
+    #    val_range = superposition.max() - superposition.min()
+    #    superposition = (superposition - thresh) / val_range
 
-#    expected_num_centroids = db.expected_loc_centroids[attr_id]
-#    centroids = cluster_heat(superposition,
-#                             expected_num_centroids + 2,
-#                             scaled_img.shape[1],
-#                             max_round=10)
+    #    expected_num_centroids = db.expected_loc_centroids[attr_id]
+    #    centroids = cluster_heat(superposition,
+    #                             expected_num_centroids + 2,
+    #                             scaled_img.shape[1],
+    #                             max_round=10)
 
     if display or vis_img_dir is not None:
-        #for c in centroids[:expected_num_centroids]:
-            #cv2.line(canvas,
-            #         (int(c[0] - cross_len), int(c[1])),
-            #         (int(c[0] + cross_len), int(c[1])),
-            #         (0, 255, 255),
-            #         thickness=4)
-            #cv2.line(canvas,
-            #         (int(c[0]), int(c[1] - cross_len)),
-            #         (int(c[0]), int(c[1] + cross_len)),
-            #         (0, 255, 255),
-            #         thickness=4)
+        # for c in centroids[:expected_num_centroids]:
+        # cv2.line(canvas,
+        #         (int(c[0] - cross_len), int(c[1])),
+        #         (int(c[0] + cross_len), int(c[1])),
+        #         (0, 255, 255),
+        #         thickness=4)
+        # cv2.line(canvas,
+        #         (int(c[0]), int(c[1] - cross_len)),
+        #         (int(c[0]), int(c[1] + cross_len)),
+        #         (0, 255, 255),
+        #         thickness=4)
 
         act_map = superposition * 256
         for j in xrange(img_height):
@@ -206,11 +204,11 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         if len(suitable_contours) != 0:
             cv2.imshow("feature bounding boxes", feature_heat_map_bbox)
             cv2.waitKey(0)
-    #if vis_img_dir is not None:
-    #    print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
-    #    cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
-   #     if len(suitable_contours) != 0:
-    #        print 'Saving to:', os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg')
+            # if vis_img_dir is not None:
+            #    print 'Saving to:', os.path.join(vis_img_dir, 'final.jpg')
+            #    cv2.imwrite(os.path.join(vis_img_dir, 'final.jpg'), canvas)
+            #     if len(suitable_contours) != 0:
+    # print 'Saving to:', os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg')
     #        cv2.imwrite(os.path.join(vis_img_dir, 'image_with_feature_bounding_boxes.jpg'), feature_heat_map_bbox)
     cv2.destroyWindow("heat")
     cv2.destroyWindow("img")
@@ -262,10 +260,10 @@ def test_localization(net,
         # pass the image throught the test net.
         try:
             attr, heat_maps, img_scale = recognize_attr(net,
-                                                               img,
-                                                               db.attr_group,
-                                                               threshold,
-                                                               neglect=False)
+                                                        img,
+                                                        db.attr_group,
+                                                        threshold,
+                                                        neglect=False)
         except ResizedImageTooLargeException:
             print 'Skipped for too large resized image.'
             continue
@@ -315,7 +313,7 @@ def test_localization(net,
                 ya1 += ph / 2
                 ph /= 2
             if 30 <= a <= 34:
-                ya1 += 3*ph/4
+                ya1 += 3 * ph / 4
                 ph /= 4
             act_map, centroids, iou_single, pos_loc_img = locate(xa1, ya1, pw, ph, img_ind, img,
                                                                  a,
