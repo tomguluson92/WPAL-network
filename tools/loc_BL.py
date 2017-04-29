@@ -32,8 +32,8 @@ import time
 import numpy as np
 
 import caffe
-from WS_BL.config import cfg, cfg_from_file, cfg_from_list
-from WS_BL.loc import test_localization, locate_in_video
+from wpal_net.config import cfg, cfg_from_file, cfg_from_list
+from wpal_net.loc import test_localization, locate_in_video
 
 
 def parse_args():
@@ -50,8 +50,6 @@ def parse_args():
     parser.add_argument('--net', dest='caffemodel',
                         help='model to test',
                         default=None, type=str)
-    parser.add_argument('--cfg', dest='cfg_file',
-                        help='optional cfg file', default=None, type=str)
     parser.add_argument('--wait', dest='wait',
                         help='wait until net file exists',
                         default=True, type=bool)
@@ -67,9 +65,6 @@ def parse_args():
     parser.add_argument('--outputdir', dest='output_dir',
                         help='the directory to save outputs',
                         default='./output', type=str)
-    parser.add_argument('--detector-weight', dest='dweight',
-                        help='the cPickle file storing the weights of detectors',
-                        default=None, type=str)
     parser.add_argument('--display', dest='display',
                         help='whether to display on screen',
                         default=1, type=int)
@@ -94,7 +89,7 @@ def parse_args():
 
     args = parser.parse_args()
 
-    if args.prototxt is None or args.caffemodel is None or args.db is None or args.dweight is None:
+    if args.prototxt is None or args.caffemodel is None or args.db is None :
         parser.print_help()
         sys.exit()
 
@@ -132,8 +127,8 @@ if __name__ == '__main__':
 
         db = PETA(os.path.join('data', 'dataset', args.db), args.par_set_id)
 
-    f = open(args.dweight, 'rb')
-    pack = cPickle.load(f)
+    #f = open(args.dweight, 'rb')
+    #pack = cPickle.load(f)
 
     # set up Caffe
     if args.gpu_id == -1:
