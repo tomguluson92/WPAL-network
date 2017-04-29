@@ -130,6 +130,11 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
         #         thickness=4)
 
         act_map = superposition * 256
+        print "height %d" %img_height
+        print "width %d" %img_width
+        print "act:heigh %d" %len(act_map)
+        print "act: Width %d" %len(act_map[0])
+
         for j in xrange(img_height):
             for k in xrange(img_width):
                 canvas[j][k][2] = min(255, max(0, canvas[j][k][2] + max(0, act_map[j][k])))
