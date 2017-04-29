@@ -59,7 +59,7 @@ def test_net(net, db, output_dir):
         if cnt % 100 == 0:
             print 'recognize_attr: {:d}/{:d} {:.3f}s' \
                 .format(cnt, num_images, _t['recognize_attr'].average_time)
-
+    all_attrs = [[all_attrs[i][j][0][0] for j in xrange(len(all_attrs[i]))] for i in xrange(len(all_attrs))]
     attr_file = os.path.join(output_dir, 'attributes.pkl')
     with open(attr_file, 'wb') as f:
         cPickle.dump(all_attrs, f, cPickle.HIGHEST_PROTOCOL)
