@@ -221,6 +221,7 @@ def locate(xa1, ya1, pw, ph, img_ind, scaled_img,
                     for j in xrange(len(score))])
 
     print " # Superposition of the heat maps."
+
     # Superposition of the heat maps.
     # superposition = sum([cv2.resize(w_func(j) / w_sum * bin2heat[j].astype(float)
     #                                * gaussian_filter(bin2heat[j].shape,
