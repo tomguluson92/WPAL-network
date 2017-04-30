@@ -35,8 +35,9 @@ def _get_image_blob(img, neglect):
 #    target_size = cfg.TEST.SCALE
     img_scale = math.sqrt(float(59536) / float(img_size_max*img_size_min))
 
-    if img_scale * img_size_min < 96:
-        raise ResizedSideTooShortException
+    # Prevent the shorter sides from being less than MIN_SIZE
+    if np.round(img_scale * img_size_min < cfg.MIN_SIZE):
+        img_scale = float(cfg.MIN_SIZE + 1) / img_size_min
 
     img = cv2.resize(img_orig, None, None, fx=img_scale, fy=img_scale,
                      interpolation=cv2.INTER_LINEAR)
