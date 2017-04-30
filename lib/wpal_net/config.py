@@ -93,7 +93,7 @@ __C.TEST = edict()
 
 # Scale to use during testing
 # The scale is the pixel size of a test image's longer sides
-__C.TEST.SCALE = 600
+__C.TEST.SCALE = 448
 
 # Max pixel area size of a scaled input image
 __C.TEST.MAX_AREA = 114688
