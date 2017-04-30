@@ -32,20 +32,10 @@ def _get_image_blob(img, neglect):
 
     processed_images = []
 
-    target_size = cfg.TEST.SCALE
-    img_scale = float(target_size) / float(img_size_max)
+#    target_size = cfg.TEST.SCALE
+    img_scale = math.sqrt(float(59536) / float(img_size_max*img_size_min))
 
-    # Prevent the shorter sides from being less than MIN_SIZE
-    if np.round(img_scale * img_size_min < cfg.MIN_SIZE):
-        img_scale = float(cfg.MIN_SIZE + 1) / img_size_min
-
-    # Prevent the area from being larger than MAX_SIZE
-    if np.round(img_scale * img_size_min * img_scale * img_size_max) > cfg.TEST.MAX_AREA:
-        if neglect:
-            raise ResizedImageTooLargeException
-        img_scale = math.sqrt(float(cfg.TEST.MAX_AREA) / float(img_size_min * img_size_max))
-
-    if img_scale * img_size_min < 64:
+    if img_scale * img_size_min < 96:
         raise ResizedSideTooShortException
 
     img = cv2.resize(img_orig, None, None, fx=img_scale, fy=img_scale,
@@ -56,6 +46,36 @@ def _get_image_blob(img, neglect):
     blob = img_list_to_blob(processed_images)
 
     return blob, img_scale
+
+
+
+
+
+
+#    target_size = cfg.TEST.SCALE
+#    img_scale = float(target_size) / float(img_size_max)
+#
+#    # Prevent the shorter sides from being less than MIN_SIZE
+#    if np.round(img_scale * img_size_min < cfg.MIN_SIZE):
+#        img_scale = float(cfg.MIN_SIZE + 1) / img_size_min
+#
+#    # Prevent the area from being larger than MAX_SIZE
+#    if np.round(img_scale * img_size_min * img_scale * img_size_max) > cfg.TEST.MAX_AREA:
+#        if neglect:
+#            raise ResizedImageTooLargeException
+#        img_scale = math.sqrt(float(cfg.TEST.MAX_AREA) / float(img_size_min * img_size_max))
+#
+#    if img_scale * img_size_min < 64:
+#        raise ResizedSideTooShortException
+#
+#    img = cv2.resize(img_orig, None, None, fx=img_scale, fy=img_scale,
+#                     interpolation=cv2.INTER_LINEAR)
+#    processed_images.append(img)
+#
+#    # Create a blob to hold the input images
+#    blob = img_list_to_blob(processed_images)
+#
+#    return blob, img_scale
 
 
 #    target_size = cfg.TEST.SCALE
