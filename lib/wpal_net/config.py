@@ -60,7 +60,7 @@ __C.TRAIN.BATCH_SIZE = 16
 # Use horizontally-flipped images during training?
 __C.TRAIN.USE_FLIPPED = True
 # The number of the attributes used in training
-__C.NUM_ATTR = 92
+__C.NUM_ATTR = 35
 # Iterations between tests
 __C.TRAIN.TEST_ITERS = 10000000
 
