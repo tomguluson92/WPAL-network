@@ -21,7 +21,7 @@
 
 
 
-name: "Inception_BN_SPP_PETA"
+name: "Inception_BN_GMP_PETA"
 
 ########################## Python Layer For Input##########################
 layer {

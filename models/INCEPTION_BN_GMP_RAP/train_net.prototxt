@@ -21,7 +21,7 @@
 
 
 
-name: "Inception_BN_SPP_RAP"
+name: "Inception_BN_GMP_RAP"
 
 ########################## Python Layer For Input##########################
 layer {
