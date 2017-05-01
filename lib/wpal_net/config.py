@@ -52,7 +52,7 @@ __C.TRAIN = edict()
 __C.TRAIN.SCALES = (384, 400, 416, 432, 448, 464, 480, 496, 512)
 
 # Max pixel area size of a scaled input image
-__C.TRAIN.MAX_AREA = 50176
+__C.TRAIN.MAX_AREA = 59536
 
 # Minibatch size (number of samples per round)
 __C.TRAIN.BATCH_SIZE = 16
@@ -60,7 +60,7 @@ __C.TRAIN.BATCH_SIZE = 16
 # Use horizontally-flipped images during training?
 __C.TRAIN.USE_FLIPPED = True
 # The number of the attributes used in training
-__C.NUM_ATTR = 51
+__C.NUM_ATTR = 92
 # Iterations between tests
 __C.TRAIN.TEST_ITERS = 10000000
 

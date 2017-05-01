@@ -57,12 +57,12 @@ def _flip_labels(labels, flip, flip_attr_pairs):
     flip:   corresponding flipping flag array.
     flip_attr_pairs: A list of attribute pairs to be flipped.
     """
-#    for pair in flip_attr_pairs:
-#        face_left_ind = [pair[0]]
-#        face_right_ind = [pair[1]]
-#        temp = labels[face_right_ind]
-#        labels[face_right_ind] = labels[face_left_ind]
-#        labels[face_left_ind] = temp
+    for pair in flip_attr_pairs:
+        face_left_ind = [pair[0]]
+        face_right_ind = [pair[1]]
+        temp = labels[face_right_ind]
+        labels[face_right_ind] = labels[face_left_ind]
+        labels[face_left_ind] = temp
     return labels
 
 
