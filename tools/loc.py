@@ -214,7 +214,7 @@ if __name__ == '__main__':
 
                     print syn_inf
                     syn_inf.sort(reverse=True)
-
+                    print syn_inf
                     #                    AP_threshold = 0.99
                     count_sum = 100
                     if count_sum > len(syn_inf):
