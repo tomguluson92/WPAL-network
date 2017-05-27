@@ -200,7 +200,7 @@ if __name__ == '__main__':
                     iou_all[int(attr_id)] = iou_sa
                     ior_all[int(attr_id)] = ior_sa
                     used_img_ind[int(attr_id)] = used_img_ind_sa
-                    used_img_label[int(attr_id)] = used_img_label
+                    used_img_label[int(attr_id)] = used_img_label_sa
                     used_img_pred[int(attr_id)] = used_img_pred_sa
                     print "testtesttesttest"
                     print iou_all[int(attr_id)]
