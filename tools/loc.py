@@ -230,11 +230,11 @@ if __name__ == '__main__':
                         for cnt_ap in range(0, count_sum):
                             # if used_img_pred[int(attr_id)][cnt_ap] > AP_threshold:
                             den_pre += 1
-                            if (used_img_label[int(attr_id)][cnt_ap] == 1) and (
-                                        ior_all[int(attr_id)][cnt_ap] >= 0.5):
+                            if (syn_inf[cnt_ap][1] == 1) and (
+                                        syn_inf[cnt_ap][2] >= 0.5):
                                 num_pre += 1
                                 num_recall += 1
-                            if used_img_label[int(attr_id)][cnt_ap] == 1:
+                            if syn_inf[cnt_ap][1] == 1:
                                 den_recall += 1
                         if den_recall * den_pre == 0:
                             print "TSkiped for error den"

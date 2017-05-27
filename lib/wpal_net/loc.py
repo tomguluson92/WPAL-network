@@ -477,7 +477,7 @@ def test_localization(net,
                                                                                      vis_img_dir)
 
             if pos_loc_img == 1:
-                if attr_id != -1 and (db.labels[img_ind][attr_id] == 0 or db.labels[img_ind][attr_id] == 0):
+                if attr_id != -1 and (db.labels[img_ind][attr_id] == 0 or db.labels[img_ind][attr_id] == 1):
     #                used_img_ind.append(img_ind)
    #                 used_img_pred.append(attr[attr_id])
                     if attr_id != -1 and db.labels[img_ind][attr_id] == 0:
@@ -488,6 +488,7 @@ def test_localization(net,
                     else:
                         a_i_label = 1
  #                       used_img_label.append(1)
+                    print "Adding syn"
                     syn_inf.append([attr[attr_id], a_i_label, overlaprate_single, img_ind])
 
  #                   iou_all[a].append(iou_single)
