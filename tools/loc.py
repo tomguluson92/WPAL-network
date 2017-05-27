@@ -215,10 +215,10 @@ if __name__ == '__main__':
                     print syn_inf
                     syn_inf.sort(reverse=True)
                     print syn_inf
-                    syn_file = os.path.join('/home/yang.zhou/Work/WPAL-network/WPAL-network/output/', 'syn_' + attr_id +
-                                            'inf.txt')
-                    with open(syn_file, 'w') as f:
-                        f.write(syn_inf)
+                   # syn_file = os.path.join('/home/yang.zhou/Work/WPAL-network/WPAL-network/output/', 'syn_' + attr_id +
+                   #                         'inf.txt')
+                   # with open(syn_file, 'w') as f:
+                   #     f.write(syn_inf)
                     # AP_threshold = 0.99
                     count_sum = 100
                     if count_sum > len(syn_inf):
