@@ -164,23 +164,88 @@ if __name__ == '__main__':
                               display=args.display,
                               max_count=args.max_count)
         else:
-            miou_all = []
-            mop_all = []
+            iou_all = []
+            ior_all = []
+            used_img_ind = []
+            used_img_label = []
+            used_img_pred = []
+            pre_all = []
+            recall_all = []
+            AP_threshold_all = []
             for i in range(0, 51):
-                miou_all.append([])
-                mop_all.append([])
+                iou_all.append([])
+                ior_all.append([])
+                used_img_ind.append([])
+                used_img_label.append([])
+                used_img_pred.append([])
+                pre_all.append([])
+                recall_all.append([])
+                AP_threshold_all.append([])
             for attr_id in args.attr_id_list.split(','):
-                mop_sa, iou_sa = test_localization(net, db, args.output_dir, pack['pos_ave'], pack['neg_ave'], pack['binding'],
-                                  attr_id=int(attr_id),
-                                  display=args.display,
-                                  max_count=args.max_count)
-                if iou_sa != -1:
-                    miou_all[int(attr_id)].append(iou_sa)
-                if mop_sa != -1:
-                    mop_all[int(attr_id)].append(mop_sa)
-            for iou_i in range(0, len(miou_all)):
-                if len(miou_all[iou_i]) != 0:
-                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
-            for mop_i in range(0, len(mop_all)):
-                if len(mop_all[mop_i]) != 0:
-                    print "The mean OP of %d-th attribute in test images is %f" % (mop_i, float(mop_all[mop_i][0]))
+                ior_sa, iou_sa, used_img_ind_sa, used_img_label_sa, used_img_pred_sa = test_localization(net, db,
+                                                                                                         args.output_dir,
+                                                                                                         pack[
+                                                                                                             'pos_ave'],
+                                                                                                         pack[
+                                                                                                             'neg_ave'],
+                                                                                                         pack[
+                                                                                                             'binding'],
+                                                                                                         attr_id=int(
+                                                                                                             attr_id),
+                                                                                                         display=args.display,
+                                                                                                         max_count=args.max_count)
+                if len(used_img_ind_sa) == 0:
+                    print "No satisfactory img for attribute %d" % attr_id
+                else:
+                    iou_all[int(attr_id)] = iou_sa
+                    ior_all[int(attr_id)] = ior_sa
+                    used_img_ind[int(attr_id)] = used_img_ind_sa
+                    used_img_label[int(attr_id)] = used_img_label
+                    used_img_pred[int(attr_id)] = used_img_pred_sa
+                    AP_threshold = 0.99
+
+                    while AP_threshold > 0:
+                        pre = 0
+                        recall = 0
+                        num_pre = 0
+                        den_pre = 0
+                        num_recall = 0
+                        den_recall = 0
+                        for cnt_ap in range(0, len(used_img_ind[int(attr_id)])):
+                            if used_img_pred[int(attr_id)][cnt_ap] > AP_threshold:
+                                den_pre += 1
+                                if (used_img_label[int(attr_id)][cnt_ap] == 1) and (ior_all[attr_id][cnt_ap] >= 0.5):
+                                    num_pre += 1
+                                    num_recall += 1
+                                if used_img_label[int(attr_id)][cnt_ap] == 1:
+                                    den_recall+=1
+                        if den_recall*den_pre == 0:
+                            print "Threshold = %f is Skiped for error den" % AP_threshold
+                            continue
+                        else:
+                            pre = float(num_pre)/float(den_pre)
+                            recall = float(num_recall)/float(num_recall)
+                            pre_all[int(attr_id)].append(pre)
+                            recall_all[int(attr_id)].append(recall)
+                            AP_threshold_all[int(attr_id)].append(AP_threshold)
+                        AP_threshold -= 0.01
+                    print
+                    print
+                    print "__________________________________________________________________________________________"
+                    print "AP_threshold:"
+                    print AP_threshold_all[int(attr_id)]
+                    print
+                    print "Pre:"
+                    print pre_all[int(attr_id)]
+                    print
+                    print "Recall:"
+                    print recall_all[int(attr_id)]
+                    print
+                    print "Total: %d" % len(AP_threshold_all)
+
+#            for iou_i in range(0, len(miou_all)):
+#                if len(miou_all[iou_i]) != 0:
+#                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
+#            for mop_i in range(0, len(mop_all)):
+#                if len(mop_all[mop_i]) != 0:
+#                    print "The mean OP of %d-th attribute in test images is %f" % (mop_i, float(mop_all[mop_i][0]))

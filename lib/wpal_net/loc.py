@@ -374,9 +374,15 @@ def test_localization(net,
     """Test localization of a WPAL Network."""
     iou_all = []
     overlaprate_all = []
+
+    used_img_ind = []
+    used_img_label = []
+    used_img_pred = []
+
     for i in range(0, 51):
         iou_all.append([])
         overlaprate_all.append([])
+
     cfg.TEST.MAX_AREA = cfg.TEST.MAX_AREA * 7 / 8
 
     num_images = len(db.test_ind)
@@ -397,10 +403,6 @@ def test_localization(net,
     for img_ind in db.test_ind:
         img_path = db.get_img_path(img_ind)
         name = os.path.split(img_path)[1]
-        if attr_id != -1 and db.labels[img_ind][attr_id] == 0:
-            print 'Image {} skipped for it is a negative sample for attribute {}!' \
-                .format(name, db.attr_eng[attr_id][0][0])
-            continue
 
         # prepare the image
         img = cv2.imread(img_path)
@@ -420,10 +422,10 @@ def test_localization(net,
             print 'Skipped for too short side.'
             continue
 
-        if attr_id != -1 and attr[attr_id] != 1:
-            print 'Image {} skipped for failing to be recognized attribute {} from!' \
-                .format(name, db.attr_eng[attr_id][0][0])
-            continue
+        # if attr_id != -1 and attr[attr_id] != 1:
+        #    print 'Image {} skipped for failing to be recognized attribute {} from!' \
+        #        .format(name, db.attr_eng[attr_id][0][0])
+        #    continue
 
         img_height = int(img.shape[0] * img_scale)
         img_width = int(img.shape[1] * img_scale)
@@ -473,7 +475,18 @@ def test_localization(net,
                                                                                      attr, heat_maps, score,
                                                                                      False and display and attr_id != -1,
                                                                                      vis_img_dir)
+
             if pos_loc_img == 1:
+
+                used_img_ind.append(img_ind)
+                used_img_pred.append(attr[attr_id])
+                if attr_id != -1 and db.labels[img_ind][attr_id] == 0:
+                    print 'Image {} is a negative sample for attribute {}!' \
+                        .format(name, db.attr_eng[attr_id][0][0])
+                    used_img_label.append(0)
+                else:
+                    used_img_label.append(1)
+
                 iou_all[a].append(iou_single)
                 overlaprate_all[a].append(overlaprate_single)
 
@@ -522,19 +535,20 @@ def test_localization(net,
         if cnt >= max_count:
             break
     if attr_id != -1:
-        # Count mean IoU:
-        if len(iou_all[attr_id]) != 0:
-            overlaprate_all_attr_sum = 0.0
-            iou_single_attr_sum = 0.0
-            for x in iou_all[attr_id]:
-                iou_single_attr_sum += x
-            for y in overlaprate_all[attr_id]:
-                overlaprate_all_attr_sum += y
-            iou_single_attr_sum /= len(iou_all[attr_id])
-            overlaprate_all_attr_sum /= len(overlaprate_all[attr_id])
-            return overlaprate_all_attr_sum, iou_single_attr_sum
+
+        if len(used_img_ind) != 0:
+            return overlaprate_all[attr_id], iou_all[attr_id], used_img_ind, used_img_label, used_img_pred
+#            overlaprate_all_attr_sum = 0.0
+#            iou_single_attr_sum = 0.0
+#            for x in iou_all[attr_id]:
+#                iou_single_attr_sum += x
+#            for y in overlaprate_all[attr_id]:
+#                overlaprate_all_attr_sum += y
+#            iou_single_attr_sum /= len(iou_all[attr_id])
+#            overlaprate_all_attr_sum /= len(overlaprate_all[attr_id])
+#            return overlaprate_all_attr_sum, iou_single_attr_sum
         else:
-            return -1, -1
+            return [], [], [], [], [], []
 
 
 def locate_in_video(net,

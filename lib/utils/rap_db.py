@@ -91,6 +91,11 @@ class RAP:
         self.label_weight = None
         self.set_partition_set_id(par_set_id)
 
+#    def evaluate_AP(self, attr, inds):
+#        cut_attr = [x[0:cfg.TEST.MAX_NUM_ATTR] for x in attr]
+#        cut_gt = [x[0:cfg.TEST.MAX_NUM_ATTR] for x in self.labels[inds]]
+#        return evaluate.AP
+
     def evaluate_mA(self, attr, inds):
         cut_attr = [x[0:cfg.TEST.MAX_NUM_ATTR] for x in attr]
         cut_gt = [x[0:cfg.TEST.MAX_NUM_ATTR] for x in self.labels[inds]]

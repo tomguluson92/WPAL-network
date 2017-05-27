@@ -32,8 +32,8 @@ def _get_image_blob(img, neglect):
 
     processed_images = []
 
-#    target_size = cfg.TEST.SCALE
-    img_scale = math.sqrt(float(59536) / float(img_size_max*img_size_min))
+    #    target_size = cfg.TEST.SCALE
+    img_scale = math.sqrt(float(59536) / float(img_size_max * img_size_min))
 
     # Prevent the shorter sides from being less than MIN_SIZE
     if np.round(img_scale * img_size_min < cfg.MIN_SIZE):
@@ -47,10 +47,6 @@ def _get_image_blob(img, neglect):
     blob = img_list_to_blob(processed_images)
 
     return blob, img_scale
-
-
-
-
 
 
 #    target_size = cfg.TEST.SCALE
@@ -112,9 +108,13 @@ def _get_blobs(img, neglect):
     return blobs, img_scale_factor
 
 
-def _attr_group_norm(pred, group):
-    for i in group:
-        pred[i] = 1 if pred[i] == max(pred[group]) else 0
+def _attr_group_norm(pred, group, binary):
+    if binary == 1:
+        for i in group:
+            pred[i] = 1 if pred[i] == max(pred[group]) else 0
+    else:
+        for i in group:
+            pred[i] = pred[i] if pred[i] == max(pred[group]) else 0
     return pred
 
 
@@ -152,12 +152,18 @@ def recognize_attr(net, img, attr_group, threshold=None, neglect=False):
     heat5 = np.average(blobs_out['heat5'], axis=0)
     score = np.average(blobs_out['score'], axis=0)
 
-    for group in attr_group:
-        pred = _attr_group_norm(pred, group)
+    binary = 0
 
-    if threshold is not None:
-        for i in xrange(pred.shape[0]):
-            pred[i] = 0 if pred[i] < threshold[i] else 1
+    if binary == 1:
+        for group in attr_group:
+            pred = _attr_group_norm(pred, group, 1)
+
+        if threshold is not None:
+            for i in xrange(pred.shape[0]):
+                pred[i] = 0 if pred[i] < threshold[i] else 1
+    if binary == 0:
+        for group in attr_group:
+            pred = _attr_group_norm(pred, group, 0)
 
     heat_maps = [x for x in heat3] + [x for x in heat4] + [x for x in heat5]
 

@@ -21,6 +21,17 @@
 
 import numpy as np
 
+#def AP(attr, gt):
+#    num = attr.__len__()
+#    num_attr = attr[0].__len__()
+#    sort_attr = attr
+#    sort_gt = gt
+#    ave_pre = []
+#    for j in xrange(num_attr):
+#        print '--------------------------------------------'
+#        print "Computing the AP of %d-th attr:" % j
+#        for i in xrange(num):
+#            if
 
 def mA(attr, gt):
     num = attr.__len__()
