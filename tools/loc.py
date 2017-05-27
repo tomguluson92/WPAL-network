@@ -218,34 +218,36 @@ if __name__ == '__main__':
                                     num_pre += 1
                                     num_recall += 1
                                 if used_img_label[int(attr_id)][cnt_ap] == 1:
-                                    den_recall+=1
-                        if den_recall*den_pre == 0:
+                                    den_recall += 1
+                        if den_recall * den_pre == 0:
                             print "Threshold = %f is Skiped for error den" % AP_threshold
                             continue
                         else:
-                            pre = float(num_pre)/float(den_pre)
-                            recall = float(num_recall)/float(num_recall)
+                            pre = float(num_pre) / float(den_pre)
+                            recall = float(num_recall) / float(num_recall)
                             pre_all[int(attr_id)].append(pre)
                             recall_all[int(attr_id)].append(recall)
                             AP_threshold_all[int(attr_id)].append(AP_threshold)
                         AP_threshold -= 0.01
+
+                #            for iou_i in range(0, len(miou_all)):
+                #                if len(miou_all[iou_i]) != 0:
+                #                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
+                #            for mop_i in range(0, len(mop_all)):
+                #                if len(mop_all[mop_i]) != 0:
+                #                    print "The mean OP of %d-th attribute in test images is %f" % (mop_i, float(mop_all[mop_i][0]))
+            for a_id in range(0, len(AP_threshold_all)):
+                if len(AP_threshold_all[a_id]) != 0:
                     print
-                    print
+                    print "For %d-th attr" % a_id
                     print "__________________________________________________________________________________________"
                     print "AP_threshold:"
-                    print AP_threshold_all[int(attr_id)]
+                    print AP_threshold_all[int(a_id)]
                     print
                     print "Pre:"
-                    print pre_all[int(attr_id)]
+                    print pre_all[int(a_id)]
                     print
                     print "Recall:"
-                    print recall_all[int(attr_id)]
+                    print recall_all[int(a_id)]
                     print
                     print "Total: %d" % len(AP_threshold_all)
-
-#            for iou_i in range(0, len(miou_all)):
-#                if len(miou_all[iou_i]) != 0:
-#                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
-#            for mop_i in range(0, len(mop_all)):
-#                if len(mop_all[mop_i]) != 0:
-#                    print "The mean OP of %d-th attribute in test images is %f" % (mop_i, float(mop_all[mop_i][0]))
