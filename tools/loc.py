@@ -238,11 +238,14 @@ if __name__ == '__main__':
                                 den_recall += 1
                         if den_recall * den_pre == 0:
                             print "TSkiped for error den"
-                            count_sum += 100
-                            if count_sum > len(syn_inf):
-                                count_sum = len(syn_inf)
-                            # AP_threshold -= 0.01
-                            continue
+                            if count_sum == len(syn_inf):
+                                break
+                            else:
+                                count_sum += 100
+                                if count_sum > len(syn_inf):
+                                    count_sum = len(syn_inf)
+                                # AP_threshold -= 0.01
+                                continue
                         else:
                             pre = float(num_pre) / float(den_pre)
                             recall = float(num_recall) / float(den_recall)
@@ -250,10 +253,13 @@ if __name__ == '__main__':
                             recall_all[int(attr_id)].append(recall)
                             #AP_threshold_all[int(attr_id)].append(AP_threshold)
                         # AP_threshold -= 0.01
-                        count_sum += 100
-                        if count_sum > len(syn_inf):
-                            count_sum = len(syn_inf)
-                        #            for iou_i in range(0, len(miou_all)):
+                        if count_sum == len(syn_inf):
+                            break
+                        else:
+                            count_sum += 100
+                            if count_sum > len(syn_inf):
+                                count_sum = len(syn_inf)
+                            #            for iou_i in range(0, len(miou_all)):
                         #                if len(miou_all[iou_i]) != 0:
                         #                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
                         #            for mop_i in range(0, len(mop_all)):
