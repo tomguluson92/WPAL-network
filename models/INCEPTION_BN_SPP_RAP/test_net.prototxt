@@ -4466,14 +4466,14 @@ layer {
     num_output: 92
   }
 }
-####################### Predicting Layer #######################
-layer {
-  bottom: "fc_syn2"
-  name: "pred"
-  top: "pred"
-  type: "Sigmoid"
-}
-##################### Localization Layers ######################
+######################## Predicting Layer #######################
+#layer {
+#  bottom: "fc_syn2"
+#  name: "pred"
+#  top: "pred"
+#  type: "Sigmoid"
+#}
+###################### Localization Layers ######################
 layer {
   bottom: "conv3_e"
   top: "heat3"
