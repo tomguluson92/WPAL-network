@@ -221,6 +221,7 @@ if __name__ == '__main__':
                                     den_recall += 1
                         if den_recall * den_pre == 0:
                             print "Threshold = %f is Skiped for error den" % AP_threshold
+                            AP_threshold -= 0.01
                             continue
                         else:
                             pre = float(num_pre) / float(den_pre)
