@@ -202,6 +202,12 @@ if __name__ == '__main__':
                     used_img_ind[int(attr_id)] = used_img_ind_sa
                     used_img_label[int(attr_id)] = used_img_label
                     used_img_pred[int(attr_id)] = used_img_pred_sa
+                    print "testtesttesttest"
+                    print iou_all[int(attr_id)]
+                    print ior_all[int(attr_id)]
+                    print used_img_ind[int(attr_id)]
+                    print used_img_label[int(attr_id)]
+                    print used_img_pred[int(attr_id)]
                     AP_threshold = 0.99
 
                     while AP_threshold > 0:
