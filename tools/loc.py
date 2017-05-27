@@ -220,7 +220,7 @@ if __name__ == '__main__':
                         for cnt_ap in range(0, len(used_img_ind[int(attr_id)])):
                             if used_img_pred[int(attr_id)][cnt_ap] > AP_threshold:
                                 den_pre += 1
-                                if (used_img_label[int(attr_id)][cnt_ap] == 1) and (ior_all[attr_id][cnt_ap] >= 0.5):
+                                if (used_img_label[int(attr_id)][cnt_ap] == 1) and (ior_all[int(attr_id)][cnt_ap] >= 0.5):
                                     num_pre += 1
                                     num_recall += 1
                                 if used_img_label[int(attr_id)][cnt_ap] == 1:
