@@ -231,7 +231,7 @@ if __name__ == '__main__':
                             continue
                         else:
                             pre = float(num_pre) / float(den_pre)
-                            recall = float(num_recall) / float(num_recall)
+                            recall = float(num_recall) / float(den_recall)
                             pre_all[int(attr_id)].append(pre)
                             recall_all[int(attr_id)].append(recall)
                             AP_threshold_all[int(attr_id)].append(AP_threshold)
