@@ -488,7 +488,7 @@ def test_localization(net,
                     else:
                         a_i_label = 1
  #                       used_img_label.append(1)
-                    syn_inf.append([attr[attr_id], [a_i_label], [overlaprate_single], [img_ind]])
+                    syn_inf.append([attr[attr_id], a_i_label, overlaprate_single, img_ind])
 
  #                   iou_all[a].append(iou_single)
  #                   overlaprate_all[a].append(overlaprate_single)

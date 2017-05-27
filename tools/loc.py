@@ -217,6 +217,8 @@ if __name__ == '__main__':
 
                     #                    AP_threshold = 0.99
                     count_sum = 100
+                    if count_sum > len(syn_inf):
+                        count_sum = len(syn_inf)
                     while count_sum <= len(syn_inf):
                         pre = 0
                         recall = 0
