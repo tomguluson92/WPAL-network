@@ -374,7 +374,7 @@ def test_localization(net,
     """Test localization of a WPAL Network."""
     iou_all = []
     overlaprate_all = []
-
+    syn_inf = []
     used_img_ind = []
     used_img_label = []
     used_img_pred = []
@@ -477,18 +477,21 @@ def test_localization(net,
                                                                                      vis_img_dir)
 
             if pos_loc_img == 1:
+                if attr_id != -1 and (db.labels[img_ind][attr_id] == 0 or db.labels[img_ind][attr_id] == 0):
+    #                used_img_ind.append(img_ind)
+   #                 used_img_pred.append(attr[attr_id])
+                    if attr_id != -1 and db.labels[img_ind][attr_id] == 0:
+                        print 'Image {} is a negative sample for attribute {}!' \
+                            .format(name, db.attr_eng[attr_id][0][0])
+                        a_i_label = 0
+  #                      used_img_label.append(0)
+                    else:
+                        a_i_label = 1
+ #                       used_img_label.append(1)
+                    syn_inf.append([attr[attr_id], [a_i_label], [overlaprate_single], [img_ind]])
 
-                used_img_ind.append(img_ind)
-                used_img_pred.append(attr[attr_id])
-                if attr_id != -1 and db.labels[img_ind][attr_id] == 0:
-                    print 'Image {} is a negative sample for attribute {}!' \
-                        .format(name, db.attr_eng[attr_id][0][0])
-                    used_img_label.append(0)
-                else:
-                    used_img_label.append(1)
-
-                iou_all[a].append(iou_single)
-                overlaprate_all[a].append(overlaprate_single)
+ #                   iou_all[a].append(iou_single)
+ #                   overlaprate_all[a].append(overlaprate_single)
 
             if attr_id == -1:
                 all_centroids += centroids
@@ -536,8 +539,9 @@ def test_localization(net,
             break
     if attr_id != -1:
 
-        if len(used_img_ind) != 0:
-            return overlaprate_all[attr_id], iou_all[attr_id], used_img_ind, used_img_label, used_img_pred
+        if len(syn_inf) != 0:
+            return syn_inf
+#            return overlaprate_all[attr_id], iou_all[attr_id], used_img_ind, used_img_label, used_img_pred
 #            overlaprate_all_attr_sum = 0.0
 #            iou_single_attr_sum = 0.0
 #            for x in iou_all[attr_id]:
@@ -548,7 +552,8 @@ def test_localization(net,
 #            overlaprate_all_attr_sum /= len(overlaprate_all[attr_id])
 #            return overlaprate_all_attr_sum, iou_single_attr_sum
         else:
-            return [], [], [], [], [], []
+            return []
+#            return [], [], [], [], [], []
 
 
 def locate_in_video(net,

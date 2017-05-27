@@ -182,69 +182,85 @@ if __name__ == '__main__':
                 recall_all.append([])
                 AP_threshold_all.append([])
             for attr_id in args.attr_id_list.split(','):
-                ior_sa, iou_sa, used_img_ind_sa, used_img_label_sa, used_img_pred_sa = test_localization(net, db,
-                                                                                                         args.output_dir,
-                                                                                                         pack[
-                                                                                                             'pos_ave'],
-                                                                                                         pack[
-                                                                                                             'neg_ave'],
-                                                                                                         pack[
-                                                                                                             'binding'],
-                                                                                                         attr_id=int(
-                                                                                                             attr_id),
-                                                                                                         display=args.display,
-                                                                                                         max_count=args.max_count)
-                if len(used_img_ind_sa) == 0:
+                # ior_sa, iou_sa, used_img_ind_sa, used_img_label_sa, used_img_pred_sa
+                syn_inf = test_localization(net, db,
+                                            args.output_dir,
+                                            pack[
+                                                'pos_ave'],
+                                            pack[
+                                                'neg_ave'],
+                                            pack[
+                                                'binding'],
+                                            attr_id=int(
+                                                attr_id),
+                                            display=args.display,
+                                            max_count=args.max_count)
+                # if len(used_img_ind_sa) == 0:
+                if len(syn_inf) == 0:
                     print "No satisfactory img for attribute %d" % attr_id
                 else:
-                    iou_all[int(attr_id)] = iou_sa
-                    ior_all[int(attr_id)] = ior_sa
-                    used_img_ind[int(attr_id)] = used_img_ind_sa
-                    used_img_label[int(attr_id)] = used_img_label_sa
-                    used_img_pred[int(attr_id)] = used_img_pred_sa
-                    print "testtesttesttest"
-                    print iou_all[int(attr_id)]
-                    print ior_all[int(attr_id)]
-                    print used_img_ind[int(attr_id)]
-                    print used_img_label[int(attr_id)]
-                    print used_img_pred[int(attr_id)]
-                    AP_threshold = 0.99
 
-                    while AP_threshold > 0:
+                    #                    iou_all[int(attr_id)] = iou_sa
+                    #                    ior_all[int(attr_id)] = ior_sa
+                    #                    used_img_ind[int(attr_id)] = used_img_ind_sa
+                    #                    used_img_label[int(attr_id)] = used_img_label_sa
+                    #                    used_img_pred[int(attr_id)] = used_img_pred_sa
+                    #                    print "testtesttesttest"
+                    #                    print iou_all[int(attr_id)]
+                    #                    print ior_all[int(attr_id)]
+                    #                    print used_img_ind[int(attr_id)]
+                    #                    print used_img_label[int(attr_id)]
+                    #                    print used_img_pred[int(attr_id)]
+
+                    print syn_inf
+                    syn_inf.sort(reverse=True)
+
+                    #                    AP_threshold = 0.99
+                    count_sum = 100
+                    while count_sum <= len(syn_inf):
                         pre = 0
                         recall = 0
                         num_pre = 0
                         den_pre = 0
                         num_recall = 0
                         den_recall = 0
-                        for cnt_ap in range(0, len(used_img_ind[int(attr_id)])):
-                            if used_img_pred[int(attr_id)][cnt_ap] > AP_threshold:
-                                den_pre += 1
-                                if (used_img_label[int(attr_id)][cnt_ap] == 1) and (ior_all[int(attr_id)][cnt_ap] >= 0.5):
-                                    num_pre += 1
-                                    num_recall += 1
-                                if used_img_label[int(attr_id)][cnt_ap] == 1:
-                                    den_recall += 1
+                        # for cnt_ap in range(0, len(used_img_ind[int(attr_id)])):
+                        for cnt_ap in range(0, count_sum):
+                            # if used_img_pred[int(attr_id)][cnt_ap] > AP_threshold:
+                            den_pre += 1
+                            if (used_img_label[int(attr_id)][cnt_ap] == 1) and (
+                                        ior_all[int(attr_id)][cnt_ap] >= 0.5):
+                                num_pre += 1
+                                num_recall += 1
+                            if used_img_label[int(attr_id)][cnt_ap] == 1:
+                                den_recall += 1
                         if den_recall * den_pre == 0:
-                            print "Threshold = %f is Skiped for error den" % AP_threshold
-                            AP_threshold -= 0.01
+                            print "TSkiped for error den"
+                            count_sum += 100
+                            if count_sum > len(syn_inf):
+                                count_sum = len(syn_inf)
+                            # AP_threshold -= 0.01
                             continue
                         else:
                             pre = float(num_pre) / float(den_pre)
                             recall = float(num_recall) / float(den_recall)
                             pre_all[int(attr_id)].append(pre)
                             recall_all[int(attr_id)].append(recall)
-                            AP_threshold_all[int(attr_id)].append(AP_threshold)
-                        AP_threshold -= 0.01
+                            #AP_threshold_all[int(attr_id)].append(AP_threshold)
+                        # AP_threshold -= 0.01
+                        count_sum += 100
+                        if count_sum > len(syn_inf):
+                            count_sum = len(syn_inf)
+                        #            for iou_i in range(0, len(miou_all)):
+                        #                if len(miou_all[iou_i]) != 0:
+                        #                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
+                        #            for mop_i in range(0, len(mop_all)):
+                        #                if len(mop_all[mop_i]) != 0:
+                        #                    print "The mean OP of %d-th attribute in test images is %f" % (mop_i, float(mop_all[mop_i][0]))
 
-                #            for iou_i in range(0, len(miou_all)):
-                #                if len(miou_all[iou_i]) != 0:
-                #                    print "The mean Iou of %d-th attribute in test images is %f" % (iou_i, float(miou_all[iou_i][0]))
-                #            for mop_i in range(0, len(mop_all)):
-                #                if len(mop_all[mop_i]) != 0:
-                #                    print "The mean OP of %d-th attribute in test images is %f" % (mop_i, float(mop_all[mop_i][0]))
-            for a_id in range(0, len(AP_threshold_all)):
-                if len(AP_threshold_all[a_id]) != 0:
+
+            for a_id in range(0, len(pre_all)):
+                if len(pre_all[a_id]) != 0:
                     print
                     print "For %d-th attr" % a_id
                     print "__________________________________________________________________________________________"
@@ -257,4 +273,4 @@ if __name__ == '__main__':
                     print "Recall:"
                     print recall_all[int(a_id)]
                     print
-                    print "Total: %d" % len(AP_threshold_all)
+                    print "Total: %d" % len(AP_threshold_all[int(a_id)])

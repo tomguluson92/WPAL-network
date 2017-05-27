@@ -146,7 +146,8 @@ def recognize_attr(net, img, attr_group, threshold=None, neglect=False):
     forward_kwargs = {'data': blobs['data'].astype(np.float32, copy=False)}
     blobs_out = net.forward(**forward_kwargs)
 
-    pred = np.average(blobs_out['pred'], axis=0)
+#    pred = np.average(blobs_out['pred'], axis=0)
+    pred = np.average(blobs_out['fc_syn2'], axis=0)
     heat3 = np.average(blobs_out['heat3'], axis=0)
     heat4 = np.average(blobs_out['heat4'], axis=0)
     heat5 = np.average(blobs_out['heat5'], axis=0)
