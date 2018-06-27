@@ -55,7 +55,7 @@ class PETA:
         except NotImplementedError:
             import h5py
             print h5py.File(osp.join(self._db_path, 'partition.mat')).keys()
-            self.name = h5py.File(osp.join(self._db_path, 'partition.mat'))['partition']
+            self._partition = h5py.File(osp.join(self._db_path, 'partition.mat'))['partition']
 
         self.num_attr = self.name.shape[0]
         self.test_ind = None
